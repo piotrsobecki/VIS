@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href="assets/css/deck.core.css">
+
+<link rel="stylesheet" href="assets/css/frontend.css">
+
+
+<script type="text/javascript" src="assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="assets/js/modernizr.custom.js"></script>
+<script type="text/javascript" src="assets/js/deck.core.js"></script>
+
+<script type="text/javascript" src="assets/js/vis.js"></script>
+<script type="text/javascript" src="assets/js/vis.jquery.js"></script>
+
+</head>
+
+
+
+<body>
+
+		<div id="dpi" style="height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;"></div>
+	<div class="presentation-wrapper deck-container">
+
+		<section class="slide">
+			<h1>Badanie</h1>
+			<p>
+				Opis badania
+			</p>
+			
+			<form action="" onsubmit="jQuery.vis('metadata',jQuery(this).serializeObject()); jQuery.vis('next'); jQuery(this).remove(); return false">
+			  Nazwa użytkownika: <input type="text" name="userid"><br>
+			  Przekątna ekranu: <input type="number" step="any" name="diagonal" ><br>
+			  <input type="submit" class="vis-button"  value="Ok">
+			</form>
+			
+		</section>
+		
+		
+		
+		<section class="slide">
+			<h2>Złudzenie Ebbinghaus'a</h2>
+			<p>
+			Ruszając strzałkami [góra] oraz [dół] ustaw wielkość środkowego okręgu w figurze znajdującej się po lewej stronie ekranu tak, by była równa wielkości środkowego okręgu w figurze po prawej stronie ekranu.
+			</p>
+			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
+		</section>
+		
+		<section class="slide">
+			<h2>Złudzenie Ebbinghaus'a</h2>
+			<canvas id="vis-ebbinghaus-canvas" width="720px" height="720px" data-vis-game="ebbinghaus" data-vis-n="5" data-vis-spacing="5" />
+		</section>
+
+		<section class="slide">
+			<h2>Złudzenie Muller'a-Lyer'a</h2>
+			<p>
+			Ruszając strzałkami [góra] oraz [dół] ustaw długość dolnej poziomej linii tak, by była równa długości górnej poziomej linii
+			</p>
+			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
+		</section>
+	
+		
+		<section class="slide">
+			<h2>Złudzenie Muller'a-Lyer'a</h2>
+			<canvas id="vis-ml-canvas" width="720px" height="720px" data-vis-game="ml" data-vis-n="5"  data-vis-spacing="3" />
+		</section>
+			
+			
+			
+		<section class="slide">
+			<h2>Złudzenie Poggendorff'a</h2>
+			<p>
+			Ruszając strzałkami [góra] oraz [dół] ustaw linię skośną, widoczną po prawej stronie ekranu tak, by znajdowała się na jednej osi z linią skośną umieszczoną po lewej stronie.
+			</p>
+			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
+		</section>
+		<section class="slide">
+			<h2>Złudzenie Poggendorff'a</h2>
+			<canvas id="vis-poggendorff-canvas" width="720px" height="720px" data-vis-game="poggendorff" data-vis-n="5" />
+		</section>
+			
+			
+			
+		<section class="slide">
+			<h2>Złudzenie Ponzo</h2>
+			<p>
+			Ruszając strzałkami [góra] oraz [dół] ustaw długość dolnej poziomej linii tak, by była równa długości górnej poziomej linii.
+			</p>
+			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
+		</section>
+		
+		<section class="slide">
+			<h2>Złudzenie Ponzo</h2>
+			<canvas id="vis-ponzo-canvas0" width="720px" height="720px" data-vis-game="ponzo" data-vis-n="2" />
+		</section>	
+		
+		<section class="slide">
+			<h2>Złudzenie Ponzo</h2>
+			<canvas id="vis-ponzo-canvas1" width="720px" height="720px" data-vis-game="ponzo" data-vis-n="2" data-vis-angle="40"  />
+		</section>	
+		
+		
+			
+			
+			
+		<section class="slide">
+			<h2>Złudzenie Zollner'a</h2>
+			<p>
+			Ruszając strzałkami [góra] oraz [dół] ustaw środkową (dłuższą) linię tak, by była równoległa do dwóch pozostałych (dłuższych) linii.
+			</p> 
+			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</button>
+		</section>
+		
+		<section class="slide">
+			<h2>Złudzenie Zollner'a</h2>
+			<canvas id="vis-zollner-canvas" width="720px" height="720px" data-vis-game="zollner" data-vis-n="5" />
+		</section>	
+		
+		
+
+		<section class="slide">
+			<h2>Koniec badania</h2>
+			<p>Dziękujemy za udział w badaniu</p>
+			<div class="vis-button"  onclick="jQuery.vis('next');" onclick="jQuery.vis('save');">Ok</button>
+		</section>
+
+	<div>
+
+	<script>
+		jQuery.vis('init');
+	
+		
+
+	</script>
+
+</body>
+</html>
