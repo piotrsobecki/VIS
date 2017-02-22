@@ -1,0 +1,37 @@
+{  
+    "_comment":{  
+        "properties":{  
+            "description":"Project properties",
+            "possible values":{  
+                "wordpress_dir":{  
+                    "env":"Environment (ex. dev) used to specify localized config file config.{env}.json.",
+                    "description":"Your wordpress installation directory (required)"
+                }
+            }
+        },
+        "dependencies":{  
+            "description":"Dependencies to install",
+            "possible_values":{  
+                "wp-cli":"Plugins value is an recursive object where inner properties represent arguments to wp install plugin of wp-cli."
+            }
+        }
+    },
+	"properties":{
+		"env":"local"
+	},
+    "dependencies":{  
+        "wp-cli":{  
+			"plugin":{
+				"install":[  
+                  [ "posts-to-posts", "--activate" ],
+                  [ "adminimize", "--activate" ],
+                  [ "shortcode-ui", "--activate" ],
+                  [ "user-role-editor", "--activate" ],
+                  [ "disable-comments", "--activate" ],
+                  [ "wp-admin-no-show", "--activate" ]
+				]
+			}
+
+        }
+    }
+}
