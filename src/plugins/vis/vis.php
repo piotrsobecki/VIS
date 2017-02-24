@@ -62,9 +62,6 @@ function vis_game($game_name, $params){
 
 
 
-
-
-
 function vis_game_ebbinghous($params){
 	return vis_game('ebbinghaus',$params);
 }
@@ -221,24 +218,12 @@ add_action( 'register_shortcode_ui', 'vis_game_zollner_shortcode_ui' );
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 function vis_next($params){
     $a = shortcode_atts( array(
         'text' => 'Ok'
     ), $params );
 
-	return '<div class="vis-button next-link" onclick="jQuery.vis(\'next\');" >'.$a['text'].'</div>';	
+	return '<div class="vis-button vis-next vis-full-screen" >'.$a['text'].'</div>';
 }
 add_shortcode('vis-next','vis_next');
 
@@ -270,11 +255,8 @@ function vis_save($params){
     $a = shortcode_atts( array(
         'text' => 'Ok'
     ), $params );
-	
-	$url = admin_url('admin-post.php');
-	$sid = get_the_ID();
 	$text = $a['text'];
-	return '<div class="vis-button" onclick="jQuery.vis(\'save\',{url:\''.$url.'\',survey_id:'.$sid.'});" >'.$text.'</div>';	
+	return '<div class="vis-button vis-save vis-full-screen-exit">'.$text.'</div>';
 }
 add_shortcode('vis-save','vis_save');
 
@@ -308,9 +290,9 @@ function vis_form($params, $content = null){
         'text' => 'Ok'
     ), $params );
 	$text = $a['text'];
-	return '<form action="" class="vis-form" onsubmit="jQuery.vis_form_submit(this); return false;" data-parsley-validate="">
+	return '<form action="" class="vis-form" data-parsley-validate="">
 				<fieldset>'.do_shortcode($content).'</fieldset>
-			  <input type="submit" class="vis-button"  value="'.$text.'">
+			  <input type="submit" class="vis-button vis-full-screen"  value="'.$text.'">
 			</form>';
 }
 add_shortcode('vis-form','vis_form');
@@ -343,9 +325,30 @@ function vis_form_shortcode_ui($params){
 add_action( 'register_shortcode_ui', 'vis_form_shortcode_ui' );
 
 
+add_filter( 'body_class', function( $classes ) {
+    if (get_post_type()=='survey'){
+        return array_merge( $classes, array( 'noselect' ) );
+    }
+    return $classes;
+});
+
 function vis_context($params, $content = null) {
-	return '<div id="dpi" style="height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;"></div>
-			<div class="presentation-wrapper deck-container">'.do_shortcode($content).'</div><script>jQuery.vis(\'init\'); </script>';
+
+
+    ob_start();
+    $post_url = admin_url('admin-post.php');
+    $sid = get_the_ID();
+    ?>
+    <div id="dpi" style="height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;"></div>
+    <div class="presentation-wrapper deck-container"><?php echo do_shortcode($content); ?></div>
+    <script>
+        jQuery.vis('init',{
+            post_url:'<?php echo $post_url; ?>',
+            survey_id:'<?php echo $sid; ?>'
+        });
+    </script>
+    <?php
+    return ob_get_clean();
 }
 add_shortcode('vis-context','vis_context');
 

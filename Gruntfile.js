@@ -81,7 +81,7 @@ module.exports = function( grunt ){
 					src: [
 						'*.js',
 						'!*.min.js',
-						'!Gruntfile.js',
+						'!Gruntfile.js'
 					],
 					dest: '<%= dirs.js %>/',
 					ext: '.min.js'

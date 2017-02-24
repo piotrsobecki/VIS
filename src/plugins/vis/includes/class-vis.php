@@ -123,10 +123,12 @@ class vis {
 		add_filter( 'page_row_actions', array( $this, 'survey_add_action_button' ), 10, 2 );
 
 		add_action( 'admin_init', array( $this, 'survey_export_function' ) );
-		
-		
-		
-		add_action( 'admin_post_nopriv_survey_submit', array( $this, 'survey_submit_handler' ) );
+
+        add_action( 'admin_init', array( $this, 'survey_purge_function' ) );
+
+
+
+        add_action( 'admin_post_nopriv_survey_submit', array( $this, 'survey_submit_handler' ) );
 		add_action( 'admin_post_survey_submit', array( $this, 'survey_submit_handler' ) );
 		
 	} // End __construct ()
@@ -303,7 +305,16 @@ class vis {
 				  'my_action' => 'survey_export',
 				)
 			  );
-			$actions['export'] = '<a href="' . esc_url( $url ) . '" target="_blank"    >Export Results</a>';
+			$text = 'Export Results ('.$this -> survey_count($post->ID).')';
+			$actions['export'] = '<a href="' . esc_url( $url ) . '" target="_blank"    >'.$text.'</a>';
+
+            $url = add_query_arg(
+                array(
+                    'survey_id' => $post->ID,
+                    'my_action' => 'survey_purge',
+                )
+            );
+            $actions['purge'] = '<a href="' . esc_url( $url ) . '">Delete Results</a>';
 		}
 		return $actions;
 	}
@@ -341,30 +352,46 @@ class vis {
 		return $columns;
 	}
 
-	function get_row($submission){
+	function get_value_map($submission){
 		$row = array();
 		
 		$metadata_dec = json_decode(str_replace('\"', '"', $submission->metadata), true);
 		$data_dec = json_decode(str_replace('\"', '"', $submission->data), true);
 
-		array_push($row,$submission->id);
-		array_push($row,$submission->survey_id);
-		array_push($row,$submission->submission_time);
+		$row['id']= $submission->id;
+        $row['survey_id']= $submission->survey_id;
+        $row['submission_time']= $submission->submission_time;
 		
 		foreach ($metadata_dec as $key => $value) {
-			array_push($row,$value); 
+            $row[$key] = $value;
 		}
 
 		foreach ($data_dec as $key => $value) {
 			foreach ($value as $inner1_key => $inner1_value) {
 				foreach ($inner1_value as $inner2_key => $inner2_value) {
-					array_push($row,$inner2_value); 
+                    $row[$key .'_'. $inner1_key .'_'. $inner2_key] = $inner2_value;
 				}
 			}
 		}
 	
 		return $row;
 	}
+
+	public function survey_count($sid){
+        global $wpdb;
+        return $wpdb->get_var(
+            $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}vis_survey_submission WHERE survey_id = %d",$sid)
+        );
+    }
+
+    public function survey_purge_function(){
+        global $wpdb;
+        if ( isset( $_REQUEST['my_action'] ) &&  'survey_purge' == $_REQUEST['my_action']  ) {
+            $sid = $_REQUEST['survey_id'];
+            $wpdb->delete( $wpdb->prefix.'vis_survey_submission', array( 'survey_id' => $sid ), array( '%d' ) );
+        }
+        wp_redirect( admin_url('edit.php?post_type=survey') );
+    }
 
 	public function survey_export_function(){
 		global $wpdb;
@@ -374,22 +401,37 @@ class vis {
 			$submissions = $wpdb->get_results(
 				$wpdb->prepare("SELECT * FROM {$wpdb->prefix}vis_survey_submission WHERE survey_id = %d ORDER BY submission_time",$sid)
 			);
-			
+
+
 			$columns = array();
-			if (!empty($submissions)){
-				$columns = $this->get_columns(reset($submissions));
-			}
-			
+			$columns_map = array();
+            $i=0;
+            foreach ($submissions as $submission){
+                $sub_columns = $this->get_columns($submission);
+                foreach($sub_columns as $column){
+                    if (!in_array($column,$columns)){
+                        array_push($columns,$column);
+                        $columns_map[$column] = $i;
+                        $i=$i+1;
+                    }
+                }
+            }
 			$rows = array();
 			foreach ($submissions as $submission){
-				array_push($rows,$this->get_row($submission));
+			    $row_map = $this -> get_value_map($submission);
+                $row=array();
+                foreach($columns as $column ){
+                    $row[$columns_map[$column]] = '';
+                }
+			    foreach($row_map as $column => $value){
+                    $row[$columns_map[$column]] = $value;
+                }
+                array_push($rows,$row);
 			}
 
 			header('Content-Encoding: UTF-8');
 			header('Content-Type: text/csv; charset=UTF-8');			
 			header('Content-Disposition: attachment; filename="survey_results_'.$sid.'.csv"');
-			//var_dump($columns);
-			//var_dump($rows);
 			echo $this->to_csv($columns,$rows,';');
 			exit;
 		}
