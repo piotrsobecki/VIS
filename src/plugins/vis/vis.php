@@ -35,7 +35,7 @@ require_once( 'includes/lib/class-vis-taxonomy.php' );
  * @return object vis
  */
 function vis () {
-	$instance = vis::instance( __FILE__, '1.0.0' );
+	$instance = vis::instance( __FILE__, '1.0.3' );
 
 	if ( is_null( $instance->settings ) ) {
 		$instance->settings = vis_Settings::instance( $instance );
@@ -56,7 +56,7 @@ function vis_game($game_name, $params){
 	foreach ($params as $param_key => $param_value){
 		$html = $html . ' data-vis-'.$param_key.'="'.$param_value.'" ';
 	}
-	$html = $html . ' />';
+	$html = $html . ' ></canvas>';
 	return $html;
 }
 
@@ -143,7 +143,7 @@ add_action( 'register_shortcode_ui', 'vis_game_ml_shortcode_ui' );
 
 
 function vis_game_ponzo_shortcode_ui($params){
-	shortcode_ui_register_for_shortcode( 
+	shortcode_ui_register_for_shortcode(
 		'vis-game-ponzo',
 		array(
 			'label' => esc_html__( 'VIS Game: Ponzo', 'shortcode-ui-game' ),
@@ -290,7 +290,7 @@ function vis_form($params, $content = null){
         'text' => 'Ok'
     ), $params );
 	$text = $a['text'];
-	return '<form action="" class="vis-form" data-parsley-validate="">
+	return '<form action="" class="vis-form vis-full-screen" data-parsley-validate="">
 				<fieldset>'.do_shortcode($content).'</fieldset>
 			  <input type="submit" class="vis-button vis-full-screen"  value="'.$text.'">
 			</form>';

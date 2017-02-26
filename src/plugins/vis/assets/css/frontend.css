@@ -19,7 +19,6 @@ canvas[data-vis-game] {
 
 
 .vis-button {
-
 	background-color: #222;
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
@@ -35,7 +34,11 @@ canvas[data-vis-game] {
 	-webkit-transition: background-color 0.2s ease-in-out;
 	transition: background-color 0.2s ease-in-out;
 	white-space: nowrap;
+	cursor: pointer;
+}
 
+.vis-button:disabled  {
+	background-color: #AAA;
 }
 
 .vis-button:active {

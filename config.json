@@ -26,9 +26,18 @@
                   [ "posts-to-posts", "--activate" ],
                   [ "adminimize", "--activate" ],
                   [ "shortcode-ui", "--activate" ],
-                  [ "user-role-editor", "--activate" ],
+                  [ "members", "--activate" ],
                   [ "disable-comments", "--activate" ],
-                  [ "wp-admin-no-show", "--activate" ]
+                  [ "wp-admin-no-show", "--activate" ],
+                  [ "shortcode-empty-paragraph-fix","--activate"],
+                  [ "admin-custom-login", "--activate"],
+                  [ "custom-login-url","--activate"],
+                  [ "nav-menu-roles", "--activate"],
+                  [ "custom-contact-forms", "--activate" ],
+                  [ "user-switching","--activate"],
+                  [ "wordpress-importer", "--activate"],
+                  [ "favicon-by-realfavicongenerator", "--activate"],
+                  [ "all-in-one-wp-migration", "--activate"]
 				]
 			}
 

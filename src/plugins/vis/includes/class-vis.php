@@ -389,8 +389,8 @@ class vis {
         if ( isset( $_REQUEST['my_action'] ) &&  'survey_purge' == $_REQUEST['my_action']  ) {
             $sid = $_REQUEST['survey_id'];
             $wpdb->delete( $wpdb->prefix.'vis_survey_submission', array( 'survey_id' => $sid ), array( '%d' ) );
+            wp_redirect( admin_url('edit.php?post_type=survey') );
         }
-        wp_redirect( admin_url('edit.php?post_type=survey') );
     }
 
 	public function survey_export_function(){

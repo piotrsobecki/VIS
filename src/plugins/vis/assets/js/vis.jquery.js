@@ -37,6 +37,7 @@
             current_fn: undefined,
             states: {},
             metadata: {},
+            formmetadata: {},
             i: 0,
             n: 0,
             games: {
@@ -240,22 +241,23 @@
                 });
             },
             set_dims: function (selector, nh,nw){
-                $html = $(selector);
-                var h = $html.height();
-                var w = $html.width();
-                $html.attr('saved-h',h);
-                $html.attr('saved-w',w);
-                $html.attr('saved-margin',$html.css('margin'));
-                $html.height(nh);
-                $html.width(nw);
-                $html.attr('style', function(i,s) { return s + 'margin: 0 !important;' });
+                $(selector).css('margin','0').css('height',nh).css('width',nw);
             },
-            restore_dims: function (selector) {
-                $html = $(selector);
-                $html.height($html.attr('saved-h'));
-                $html.width($html.attr('saved-w'));
-                $html.css('margin',$html.attr('saved-margin'));
-                $html.removeAttr('saved-h');
+            set_style_css_attr: function (selector,attr,val){
+                $(selector).css(attr,val);
+            },
+            save_style_attr:function(selector){
+                var $sel = $(selector);
+                var style = $sel.attr('style');
+                if (typeof style == typeof undefined || style !== false) {
+                    style = '';
+                }
+                $sel.attr('saved-style', style);
+            },
+            restore_style_attr:function(selector){
+                var $sel = $(selector+'[saved-style]');
+                $sel.attr('style',$sel.attr('saved-style'));
+                $sel.removeAttr('saved-style');
             }
         },
         options:{
@@ -294,28 +296,77 @@
         }
     };
 
-    $.vis = function (action, options = {}) {
+    $.fn.bindFirst = function(name, fn) {
+        this.on(name, fn);
+        this.each(function() {
+            var handlers = $._data(this, 'events')[name.split('.')[0]];
+            var handler = handlers.pop();
+            handlers.splice(0, 0, handler);
+        });
+    };
 
-        function init_slide($slide){
+    $.vis = function (action, arg) {
 
+
+        var param={};
+        if (typeof arg !== 'undefined'){
+            param = arg;
         }
 
-        if (action === "init-slide"){
-            var $canvas = options.slide.find('canvas');
-            if ($canvas.length && context.gm.new_game($canvas) ) {
-                context.functions.set_zindex(0);
-                context.functions.set_dims('html',window.innerHeight,window.innerWidth);
-            } else {
-                context.functions.restore_zindex();
-                context.functions.restore_dims('html[saved-h]');
+        function set_diagonal(){
+            if (typeof context.gm.formmetadata.diagonal == 'undefined'){
+                context.gm.metadata.diagonal = context.functions.calc_diagonal();
+                $("input[name='diagonal']").val(context.gm.metadata.diagonal);
             }
         }
 
+        function set_userid(){
+            if (typeof context.gm.formmetadata.userid == 'undefined'){
+                context.gm.metadata.userid = context.functions.uid();
+                $("input[name='userid']").val(context.gm.metadata.userid);
+            }
+        }
+
+        if (action === "init-slide"){
+            var $canvas = param.slide.find('canvas');
+            if ($canvas.length && context.gm.new_game($canvas) ) {
+                context.functions.set_zindex(0);
+                context.functions.restore_style_attr('html');
+                context.functions.save_style_attr('html');
+                context.functions.set_dims('html', window.innerHeight, window.innerWidth);
+                context.functions.set_style_css_attr('html', 'overflow', 'hidden');
+            } else {
+                context.functions.restore_zindex();
+                context.functions.restore_style_attr('html');
+                context.functions.save_style_attr('html');
+            }
+        }
+
+        if (action === "full-screen"){
+            context.functions.launchIntoFullscreen(document.documentElement);
+            //context.functions.restore_style_attr('html');
+            //context.functions.save_style_attr('html');
+            context.functions.set_dims('html',window.innerHeight,window.innerWidth);
+            set_diagonal();
+        }
+
+        if (action === "full-screen-exit"){
+            context.functions.exitFullscreen();
+            context.functions.set_dims('html',window.innerHeight,window.innerWidth);
+            set_diagonal();
+        }
+
+        if (action === "submit") {
+            context.gm.submit();
+        }
+
         if (action === "init") {
-            $.extend(true, context.options, options);
+            $.extend(true, context.options, param);
             $.deck.defaults = context.options.deck;
             $.deck('.slide');
             $.vis( 'init-slide', {slide: $.deck('getSlide') } );
+            set_userid();
+            set_diagonal();
 
             $(document).bind('deck.change', function (event, from, to) {
                 $.vis( 'init-slide', {slide: $.deck('getSlide', to) } );
@@ -325,18 +376,15 @@
             window.addEventListener('keydown', function (e) {
                 if (e.keyCode == KEY_ENTER && context.gm.current !== undefined) {
                     e.preventDefault();
-                    context.gm.submit();
+                    $.vis( 'submit');
                 }
             });
-
-            context.gm.metadata.userid = context.functions.uid();
-            context.gm.metadata.diagonal = context.functions.calc_diagonal();
-            $("input[name='userid']").val(context.gm.metadata.userid);
-            $("input[name='diagonal']").val(context.gm.metadata.diagonal);
         }
 
         if (action === "save") {
+            $(param).off('click');
             console.log(context.gm.states);
+            $.extend(true, context.gm.metadata, context.gm.formmetadata);
             console.log(context.gm.metadata);
             context.functions.post(context.options.post_url, {
                 'action': 'survey_submit',
@@ -344,18 +392,26 @@
                 'metadata': JSON.stringify(context.gm.metadata),
                 'data': JSON.stringify(context.gm.states)
             });
+
+            var save_event = jQuery.Event( "vis-save" );
+            save_event.source  = param;
+            $(document).trigger(save_event);
         }
 
         if (action === "metadata") {
-            $.extend(true, context.gm.metadata, options);
+            $.extend(true, context.gm.formmetadata, param);
+            $.extend(true, context.gm.metadata, param);
         }
 
         if (action === "extend-gm") {
-            $.extend(true, context.gm, options);
+            $.extend(true, context.gm, param);
         }
 
         if (action === "next") {
             $.deck('next');
+            var next_event = jQuery.Event( "vis-next" );
+            next_event.source  = param;
+            $(document).trigger(next_event);
         }
 
     };
@@ -392,31 +448,33 @@
             console.log("msfullscreenchange event! ", e);
         });
 
-
-        $(".vis-full-screen").click(function(){
-            context.functions.launchIntoFullscreen(document.documentElement);
+        $(document).bind( "vis-next vis-save", function(e){
+            var $source = $(e.source);
+            if ($source.hasClass('vis-full-screen')){
+                $.vis('full-screen',this);
+            } else if ($source.hasClass('vis-full-screen-exit')){
+                $.vis('full-screen-exit',this);
+            }
         });
 
-        $(".vis-full-screen-exit").click(function(){
-            context.functions.exitFullscreen();
+        $(".vis-next").bindFirst('click',function(event){
+            $.vis('next',this);
         });
 
-        $(".vis-next").click(function(event){
-            $.vis('next');
+        $(".vis-save").bindFirst('click',function(){
+            $.vis('save',this);
         });
 
-        $(".vis-save").click(function(){
-            $.vis('save');
-        });
-
-        $(".vis-form").submit(function(event){
+        $(".vis-form").bindFirst('submit',function(event){
             event.preventDefault();
             if ($(this).parsley().validate()) {
                 $.vis('metadata', context.functions.serializeObject(this));
-                $.vis('next');
+                $.vis('next',this);
                 $(this).remove();
             }
         });
+
+
     });
 
 })(jQuery);
