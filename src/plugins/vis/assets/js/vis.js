@@ -11,6 +11,7 @@ function LineComponent(x1, y1, x2, y2) {
     }
 }
 
+
 function PonzoComponent(x, y, angle, len_line, width, len_reference, len) {
 
     function endpoints(m, angle, len) {
@@ -168,6 +169,19 @@ function CircleComponent(x, y, radius) {
     }
 }
 
+
+function FixationComponent(x,y,radius,color) {
+    return {
+        update: function (ctx) {
+            ctx.beginPath();
+            ctx.fillStyle=color;
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.fill();
+        },
+        newPos: function (context) {
+        }
+    }
+}
 
 function EbinghouseComponent(x, y, radius, radius_central, n_components, radius_component, color) {
     var central_elem = new CircleComponent(x, y, radius_central);
@@ -695,3 +709,6 @@ function MullerLyerGame(opt) {
     };
 }
 MullerLyerGame.prototype = Object.create(AbstractGame.prototype);
+
+
+

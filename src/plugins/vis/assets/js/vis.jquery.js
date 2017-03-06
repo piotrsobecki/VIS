@@ -33,6 +33,9 @@
         }
 
         return {
+            canvas: function(){
+                return this.current.arena.canvas;
+            },
             current: undefined,
             current_fn: undefined,
             states: {},
@@ -90,6 +93,9 @@
             can_submit: function(){
                 return typeof this.current !== 'undefined' && !this.current_$canvas.is('[timeout-wait]');
             },
+            fixation:function(radius,color){
+                new FixationComponent(window.innerWidth/2,window.innerHeight/2,radius,color).update(this.canvas().getContext('2d'));
+            },
             submit: function(){
                 if ( this.can_submit()){
                     var self = this;
@@ -97,13 +103,16 @@
                     this.log();
                     this.stop();
                     console.log(this.states);
+                    $('#vis-exposition-number').text(this.i  + ' / ' + this.n);
                     if (this.i > this.n) {
                         this.clear_game();
                         $.vis('next');
                     } else {
                         this.current.clear();
                         this.current_$canvas.attr("timeout-wait","true");
+                        this.fixation(4,'#000000');
                         setTimeout(function(){
+                            self.current.clear();
                             self.start();
                             self.current_$canvas.removeAttr("timeout-wait");
                         }, 1000);
@@ -152,6 +161,7 @@
                     this.current = this.games[this.current_fn](ppi, $canvas);
                     this.current_$canvas = $canvas;
                     this.current.start();
+                    $('#vis-exposition-number').text(this.i  + ' / ' + this.n);
                     return true;
                 }
                 return false;
@@ -330,6 +340,7 @@
         if (action === "init-slide"){
             var $canvas = param.slide.find('canvas');
             if ($canvas.length && context.gm.new_game($canvas) ) {
+                context.gm.canvas().getContext("2d").lineWidth = 2;
                 context.functions.set_zindex(0);
                 context.functions.restore_style_attr('html');
                 context.functions.save_style_attr('html');
@@ -368,6 +379,16 @@
             set_userid();
             set_diagonal();
 
+
+
+            $('.site-content').addClass('site-content--survey');
+            context.functions.save_style_attr('.site-content--survey > div');
+            $c_div = $('.site-content--survey > div');
+            $c_div.css('margin-top',$c_div.height()/2);
+
+
+
+
             $(document).bind('deck.change', function (event, from, to) {
                 $.vis( 'init-slide', {slide: $.deck('getSlide', to) } );
             });
@@ -396,6 +417,9 @@
             var save_event = jQuery.Event( "vis-save" );
             save_event.source  = param;
             $(document).trigger(save_event);
+
+            $('.site-content').removeClass('site-content--survey');
+            context.functions.restore_style_attr('.site-content--survey > div');
         }
 
         if (action === "metadata") {

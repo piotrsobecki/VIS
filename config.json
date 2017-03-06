@@ -37,7 +37,8 @@
                   [ "user-switching","--activate"],
                   [ "wordpress-importer", "--activate"],
                   [ "favicon-by-realfavicongenerator", "--activate"],
-                  [ "all-in-one-wp-migration", "--activate"]
+                  [ "all-in-one-wp-migration", "--activate"],
+                  [ "baw-login-logout-menu", "--activate"]
 				]
 			}
 

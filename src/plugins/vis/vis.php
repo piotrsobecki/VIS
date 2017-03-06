@@ -56,7 +56,8 @@ function vis_game($game_name, $params){
 	foreach ($params as $param_key => $param_value){
 		$html = $html . ' data-vis-'.$param_key.'="'.$param_value.'" ';
 	}
-	$html = $html . ' ></canvas>';
+	$html = $html . ' ></canvas>
+	<div id="vis-canvas-overlay"><span id="vis-exposition-number"></span></div>';
 	return $html;
 }
 
