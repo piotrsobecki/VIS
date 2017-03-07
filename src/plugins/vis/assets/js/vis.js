@@ -687,8 +687,8 @@ function MullerLyerGame(opt) {
     this.start = function () {
         var w = this.arena.canvas.width;
         var h = this.arena.canvas.height;
-        this.elem_test = new InwardMultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, vis_utils.random_change(this.o.tl, this.o.rr), this.o.tal, this.o.theta);
-        this.elem_ref = new MultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, vis_utils.random_change(this.o.tl, this.o.rr), this.o.bal, this.o.theta);
+        this.elem_test = new MultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, vis_utils.random_change(this.o.tl, this.o.rr), this.o.tal, this.o.theta);
+        this.elem_ref = new InwardMultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, vis_utils.random_change(this.o.bl, this.o.rr), this.o.bal, this.o.theta);
         AbstractGame.prototype.start.apply(this);
     };
     this.update = function () {

@@ -58,7 +58,7 @@
                         canvasID: $canvas.attr('id'),
                         ppi: ppi
                     };
-                    add_attrs(opt, $canvas, ['spacing', 'tl', 'bl', 'rr'], ppi);
+                    add_attrs(opt, $canvas, ['spacing', 'tl', 'bl', 'bal', 'tal', 'rr'], ppi);
                     add_attrs(opt, $canvas, ['speed', 'theta'], 1);
                     return new MullerLyerGame(opt);
                 },
@@ -497,7 +497,6 @@
                 $(this).remove();
             }
         });
-
 
     });
 
