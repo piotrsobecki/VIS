@@ -1,3 +1,16 @@
+var component_utils = {
+
+    endpoints: function (m, angle, len) {
+        var a = Math.tan(angle * (Math.PI / 180));
+        var b = m.y - a * m.x;
+        var x0 = m.x - (len / 2) / Math.sqrt(1 + Math.pow(a, 2));
+        var x1 = m.x + (len / 2) / Math.sqrt(1 + Math.pow(a, 2));
+        return [{x: x0, y: a * x0 + b}, {x: x1, y: a * x1 + b}];
+    }
+
+};
+
+
 function LineComponent(x1, y1, x2, y2) {
     return {
         length: function () {
@@ -19,8 +32,8 @@ function CenteredLineComponent(x, y, length) {
         length: length,
         update: function (context) {
             context.beginPath();
-            context.moveTo(x - this.length/2, y);
-            context.lineTo(x + this.length/2, y);
+            context.moveTo(x - this.length / 2, y);
+            context.lineTo(x + this.length / 2, y);
             context.stroke();
         },
         newPos: function (context) {
@@ -35,21 +48,13 @@ function CenteredLineComponent(x, y, length) {
 
 function PonzoComponent(x, y, angle, width, side_len_lenth) {
 
-    function endpoints(m, angle, len) {
-        var a = Math.tan(angle * (Math.PI / 180));
-        var b = m.y - a * m.x;
-        var x0 = m.x - (len / 2) / Math.sqrt(1 + Math.pow(a, 2));
-        var x1 = m.x + (len / 2) / Math.sqrt(1 + Math.pow(a, 2));
-        return [{x: x0, y: a * x0 + b}, {x: x1, y: a * x1 + b}];
-    }
-
     return {
         speed: 0,
         update: function (context) {
             mid = {x: x - width / 2, y: y};
-            ep_left = endpoints(mid, -angle, side_len_lenth);
+            ep_left = component_utils.endpoints(mid, -angle, side_len_lenth);
             mid = {x: x + width / 2, y: y};
-            ep_right = endpoints(mid, angle, side_len_lenth);
+            ep_right = component_utils.endpoints(mid, angle, side_len_lenth);
             new LineComponent(ep_left[0].x, ep_left[0].y, ep_left[1].x, ep_left[1].y).update(context);
             new LineComponent(ep_right[0].x, ep_right[0].y, ep_right[1].x, ep_right[1].y).update(context);
 
@@ -77,22 +82,22 @@ function MultiArrowComponent(x, y, len, r, theta) {
 
             context.beginPath();
             context.moveTo(x1, y1);
-            context.lineTo(x1 + r * Math.cos(theta* Math.PI / 180), y1 + r * Math.sin(theta* Math.PI / 180));
+            context.lineTo(x1 + r * Math.cos(theta * Math.PI / 180), y1 + r * Math.sin(theta * Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x1, y1);
-            context.lineTo(x1 + r * Math.cos(-theta* Math.PI / 180), y1 + r * Math.sin(-theta* Math.PI / 180));
+            context.lineTo(x1 + r * Math.cos(-theta * Math.PI / 180), y1 + r * Math.sin(-theta * Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x2, y2);
-            context.lineTo(x2 + r * Math.cos(-(180-theta)* Math.PI / 180), y2 + r * Math.sin(-(180-theta)* Math.PI / 180));
+            context.lineTo(x2 + r * Math.cos(-(180 - theta) * Math.PI / 180), y2 + r * Math.sin(-(180 - theta) * Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x2, y2);
-            context.lineTo(x2 + r * Math.cos(-(180-theta)* Math.PI / 180), y2 + r * Math.sin((180-theta)* Math.PI / 180));
+            context.lineTo(x2 + r * Math.cos(-(180 - theta) * Math.PI / 180), y2 + r * Math.sin((180 - theta) * Math.PI / 180));
             context.stroke();
         },
         newPos: function (context) {
@@ -119,22 +124,22 @@ function InwardMultiArrowComponent(x, y, len, r, theta) {
 
             context.beginPath();
             context.moveTo(x1, y1);
-            context.lineTo(x1 + r * Math.cos((180-theta)* Math.PI / 180), y1 + r * Math.sin((180-theta)* Math.PI / 180));
+            context.lineTo(x1 + r * Math.cos((180 - theta) * Math.PI / 180), y1 + r * Math.sin((180 - theta) * Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x1, y1);
-            context.lineTo(x1 + r * Math.cos(-(180-theta)* Math.PI / 180), y1 + r * Math.sin(-(180-theta)* Math.PI / 180));
+            context.lineTo(x1 + r * Math.cos(-(180 - theta) * Math.PI / 180), y1 + r * Math.sin(-(180 - theta) * Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x2, y2);
-            context.lineTo(x2 + r * Math.cos(-theta* Math.PI / 180 ), y2 + r * Math.sin(-theta* Math.PI / 180));
+            context.lineTo(x2 + r * Math.cos(-theta * Math.PI / 180), y2 + r * Math.sin(-theta * Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x2, y2);
-            context.lineTo(x2 + r * Math.cos(-theta* Math.PI / 180 ), y2 + r * Math.sin(theta* Math.PI / 180));
+            context.lineTo(x2 + r * Math.cos(-theta * Math.PI / 180), y2 + r * Math.sin(theta * Math.PI / 180));
             context.stroke();
         },
         newPos: function (context) {
@@ -167,7 +172,6 @@ function CircleComponent(x, y, radius) {
         }
     }
 }
-
 
 function FixationComponent(x, y, radius, color) {
     return {
@@ -215,32 +219,22 @@ function EbinghouseComponent(x, y, radius, radius_central, n_components, radius_
 }
 
 
-function StripedLineComponent(x1, x2, y, angle, spacing, inverse) {
-
+function StripedLineComponent(x1, x2, y, angle, stripe_spacing, stripe_angle, stripe_len) {
     return {
         angle: angle,
         update: function (context) {
-
             context.save();
             context.translate((x1 + x2) / 2, y);
             context.rotate(this.angle * Math.PI / 180);
             context.translate(-(x1 + x2) / 2, -y);
             new LineComponent(x1, y, x2, y).update(context);
             context.restore();
-
-            stripe_len = 3 * spacing;
-            len = (x2 - x1) / spacing;
-            running_x = x1 - spacing;
-            for (i = 0; i < len; i++) {
-                if (inverse) {
-                    x2 = running_x + spacing;
-                    x1 = running_x + 2 * spacing;
-                } else {
-                    x1 = running_x + spacing;
-                    x2 = running_x + 2 * spacing;
-                }
-                new LineComponent(x1, y + stripe_len / 2, x2, y - stripe_len / 2).update(context);
-                running_x += spacing;
+            len = (x2 - x1) / stripe_spacing;
+            running_x = x1;
+            for (i = 0; i < len -1 ; i++) {
+                running_x += stripe_spacing;
+                var eps = component_utils.endpoints({x:running_x,y:y},stripe_angle,stripe_len);
+                new LineComponent(eps[0].x, eps[0].y, eps[1].x, eps[1].y).update(context);
             }
         },
         newPos: function (context) {
@@ -248,7 +242,7 @@ function StripedLineComponent(x1, x2, y, angle, spacing, inverse) {
     }
 }
 
-function ZollnerComponent(x, y, width, height, spacings, rotation_angle, angle_reference, angle) {
+function ZollnerComponent(x, y, width, height, stripe_spacing, rotation_angle, angle_reference, angle, stripe_angle, stripe_len) {
     return {
         angle: angle,
         angle_reference: angle_reference,
@@ -258,11 +252,10 @@ function ZollnerComponent(x, y, width, height, spacings, rotation_angle, angle_r
             context.translate(x, y);
             context.rotate(rotation_angle * Math.PI / 180);
             context.translate(-x, -y);
-            new StripedLineComponent(x - width / 2, x + width / 2, y - height / 3, this.angle_reference, spacings, false).update(context);
 
-            new StripedLineComponent(x - width / 2, x + width / 2, y, this.angle, spacings, true).update(context);
-
-            new StripedLineComponent(x - width / 2, x + width / 2, y + height / 3, this.angle_reference, spacings, false).update(context);
+            new StripedLineComponent(x - width / 2, x + width / 2, y - height / 3, this.angle_reference, stripe_spacing, stripe_angle,stripe_len).update(context);
+            new StripedLineComponent(x - width / 2, x + width / 2, y, this.angle, stripe_spacing, -stripe_angle,stripe_len).update(context);
+            new StripedLineComponent(x - width / 2, x + width / 2, y + height / 3, this.angle_reference, stripe_spacing, stripe_angle,stripe_len).update(context);
             context.restore();
         },
         newPos: function (context) {
@@ -515,7 +508,10 @@ function ZollnerGame(opt) {
         spacings: 20, // Spacing between top and bottom component
         len: 500, //Length of the  lines
         rotangle: -45, //Default rotation angle
-        rr: 10 //Random modifier
+        rr: 10, //Random modifier,
+        rr_reference: 0, //Random modifier,
+        stripe_angle:45,
+        stripe_len:50
     }, opt);
     opts.handlers = {
         up: function () {
@@ -531,9 +527,9 @@ function ZollnerGame(opt) {
         const w = this.arena.canvas.width;
         const h = this.arena.canvas.height;
         var rot_angle = vis_utils.random_change(this.o.rotangle, this.o.rr);
-        var reference_angle = 0;
+        var reference_angle = vis_utils.random_change(0, this.o.rr_reference);
         var angle = vis_utils.random_change(0, this.o.rr);
-        this.elem_test = new ZollnerComponent(w / 2, h / 2, this.o.len, this.o.spacing * 3, this.o.spacings, rot_angle, reference_angle, angle);
+        this.elem_test = new ZollnerComponent(w / 2, h / 2, this.o.len, this.o.spacing * 3, this.o.spacings, rot_angle, reference_angle, angle,this.o.stripe_angle,this.o.stripe_len);
         AbstractGame.prototype.start.apply(this);
     };
 
@@ -652,11 +648,11 @@ function PonzoGame(opt) {
         var h = this.arena.canvas.height;
         var tl = this.o.tl;//vis_utils.random_change(o.tl,o.rr);
         var bl = vis_utils.random_change(this.o.bl, this.o.rr);
-        var elem_upper = new CenteredLineComponent(w/2, h/2 - this.o.inner_spacing / 2, this.o.tl);
-        var elem_lower = new CenteredLineComponent(w/2, h/2 + this.o.inner_spacing / 2, this.o.bl);
-        this.elem_main = new PonzoComponent(w / 2, h / 2, this.o.angle,this.o.spacing, this.o.side_line_length);
+        var elem_upper = new CenteredLineComponent(w / 2, h / 2 - this.o.inner_spacing / 2, this.o.tl);
+        var elem_lower = new CenteredLineComponent(w / 2, h / 2 + this.o.inner_spacing / 2, this.o.bl);
+        this.elem_main = new PonzoComponent(w / 2, h / 2, this.o.angle, this.o.spacing, this.o.side_line_length);
 
-        if ( this.o.test == 'upper'){
+        if (this.o.test == 'upper') {
             this.elem_test = elem_upper;
             this.elem_ref = elem_lower;
         } else {
@@ -720,12 +716,12 @@ function MullerLyerGame(opt) {
         var w = this.arena.canvas.width;
         var h = this.arena.canvas.height;
         if (this.o.test == 'upper') {
-            this.elem_ref  =  new MultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, this.o.bl, this.o.bal, this.o.theta);
-            this.elem_test =  new InwardMultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, vis_utils.random_change(this.o.tl, this.o.rr), this.o.tal, this.o.theta);
+            this.elem_ref = new MultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, this.o.bl, this.o.bal, this.o.theta);
+            this.elem_test = new InwardMultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, vis_utils.random_change(this.o.tl, this.o.rr), this.o.tal, this.o.theta);
         } else {
 
-            this.elem_ref =  new InwardMultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, this.o.tl, this.o.tal, this.o.theta);
-            this.elem_test =  new MultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, vis_utils.random_change(this.o.bl, this.o.rr), this.o.bal, this.o.theta);
+            this.elem_ref = new InwardMultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, this.o.tl, this.o.tal, this.o.theta);
+            this.elem_test = new MultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, vis_utils.random_change(this.o.bl, this.o.rr), this.o.bal, this.o.theta);
         }
         AbstractGame.prototype.start.apply(this);
     };

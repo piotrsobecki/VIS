@@ -212,12 +212,16 @@ function vis_game_zollner_shortcode_ui($params){
 				array( 'label' => esc_html__( 'Number of expositions', 'shortcode-ui-game' ), 'attr' => 'n', 'type' => 'number'),
 				array( 'label' => esc_html__( 'Speed of change given input', 'shortcode-ui-game' ), 'attr' => 'speed', 'type' => 'number'),
 				array( 'label' => esc_html__( 'Randomization factor (maximum change to test element)', 'shortcode-ui-game' ), 'attr' => 'rr', 'type' => 'number'),
-				
+                array( 'label' => esc_html__( 'Randomization factor (maximum change to reference element)', 'shortcode-ui-game' ), 'attr' => 'rr_reference', 'type' => 'number'),
+
 				array( 'label' => esc_html__( 'Length of the  lines (inches)', 'shortcode-ui-game' ), 'attr' => 'len', 'type' => 'number'),
 				array( 'label' => esc_html__( 'Spaciong between smaller lines (inches)', 'shortcode-ui-game' ), 'attr' => 'spacings', 'type' => 'number'),
 				array( 'label' => esc_html__( 'Rotation angle of whole setup', 'shortcode-ui-game' ), 'attr' => 'rotangle', 'type' => 'number'),
 
-                array( 'label' => esc_html__( 'Which element should be tested', 'shortcode-ui-game' ), 'attr' => 'test', 'type' => 'text')
+                array( 'label' => esc_html__( 'Angle of each stripe in regards to long line', 'shortcode-ui-game' ), 'attr' => 'stripe_angle', 'type' => 'number'),
+                array( 'label' => esc_html__( 'Length of each stripe', 'shortcode-ui-game' ), 'attr' => 'stripe_len', 'type' => 'number')
+
+                //array( 'label' => esc_html__( 'Which element should be tested', 'shortcode-ui-game' ), 'attr' => 'test', 'type' => 'text')
 				
 			)
 		)

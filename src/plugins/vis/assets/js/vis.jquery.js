@@ -98,8 +98,8 @@
                         canvasID: $canvas.attr('id'),
                         ppi: ppi
                     };
-                    add_attrs(opt, $canvas, ['spacing', 'spacings', 'len'], ppi);
-                    add_attrs(opt, $canvas, ['speed', 'rotangle', 'rr'], 1);
+                    add_attrs(opt, $canvas, ['spacing', 'spacings', 'len','stripe_len'], ppi);
+                    add_attrs(opt, $canvas, ['speed', 'rotangle', 'rr','rr_reference','stripe_angle'], 1);
                     add_str_attrs(opt,$canvas,['test']);
                     return new ZollnerGame(opt);
                 }
