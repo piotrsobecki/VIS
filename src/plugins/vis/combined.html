@@ -7,7 +7,9 @@
 <link rel="stylesheet" href="assets/css/frontend.css">
 
 
+
 <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/js/parsley.min.js"></script>
 <script type="text/javascript" src="assets/js/modernizr.custom.js"></script>
 <script type="text/javascript" src="assets/js/deck.core.js"></script>
 
@@ -17,7 +19,9 @@
 </head>
 
 
-
+<script type="text/javascript">
+jQuery = $;
+</script>
 <body>
 
 		<div id="dpi" style="height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;"></div>
@@ -29,7 +33,7 @@
 				Opis badania
 			</p>
 			
-			<form action="" onsubmit="jQuery.vis('metadata',jQuery(this).serializeObject()); jQuery.vis('next'); jQuery(this).remove(); return false">
+			<form action="" class="vis-form vis-full-screen" data-parsley-validate="">
 			  Nazwa użytkownika: <input type="text" name="userid"><br>
 			  Przekątna ekranu: <input type="number" step="any" name="diagonal" ><br>
 			  <input type="submit" class="vis-button"  value="Ok">
@@ -63,7 +67,7 @@
 		
 		<section class="slide">
 			<h2>Złudzenie Muller'a-Lyer'a</h2>
-			<canvas id="vis-ml-canvas" width="720px" height="720px" data-vis-game="ml" data-vis-n="5"  data-vis-spacing="3" />
+			<canvas id="vis-ml-canvas" width="720px" height="720px" data-vis-game="ml" data-vis-n="5"  data-vis-spacing="3" data-vis-theta="40"/>
 		</section>
 			
 			

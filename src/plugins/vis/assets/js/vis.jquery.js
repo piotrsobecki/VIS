@@ -16,6 +16,15 @@
             return opt;
         }
 
+        function add_str_attrs(opt, $canvas, attrs) {
+            for (i = 0; i < attrs.length; i++) {
+                attr = get_attr($canvas, attrs[i]);
+                if (typeof attr !== typeof undefined && attr !== false) {
+                    opt[attrs[i]] = attr ;
+                }
+            }
+            return opt;
+        }
 
         function calc_dpi(diagonal_in) {
             var w = window.innerWidth;
@@ -51,6 +60,7 @@
                     };
                     add_attrs(opt, $canvas, ['spacing', 'radius', 'lri', 'lro', 'rri', 'rro', 'rr'], ppi);
                     add_attrs(opt, $canvas, ['speed', 'nc'], 1);
+                    add_str_attrs(opt,$canvas,['test']);
                     return new EbinghouseGame(opt);
                 },
                 ml: function (ppi, $canvas) {
@@ -60,6 +70,7 @@
                     };
                     add_attrs(opt, $canvas, ['spacing', 'tl', 'bl', 'bal', 'tal', 'rr'], ppi);
                     add_attrs(opt, $canvas, ['speed', 'theta'], 1);
+                    add_str_attrs(opt,$canvas,['test']);
                     return new MullerLyerGame(opt);
                 },
                 ponzo: function (ppi, $canvas) {
@@ -69,6 +80,7 @@
                     };
                     add_attrs(opt, $canvas, ['spacing', 'height', 'rr', 'tl', 'bl', 'side_line_length'], ppi);
                     add_attrs(opt, $canvas, ['speed', 'angle'], 1);
+                    add_str_attrs(opt,$canvas,['test']);
                     return new PonzoGame(opt);
                 },
                 poggendorff: function (ppi, $canvas) {
@@ -78,6 +90,7 @@
                     };
                     add_attrs(opt, $canvas, ['spacing', 'height', 'rr'], ppi);
                     add_attrs(opt, $canvas, ['speed'], 1);
+                    add_str_attrs(opt,$canvas,['test']);
                     return new PoggendorffGame(opt);
                 },
                 zollner: function (ppi, $canvas) {
@@ -87,6 +100,7 @@
                     };
                     add_attrs(opt, $canvas, ['spacing', 'spacings', 'len'], ppi);
                     add_attrs(opt, $canvas, ['speed', 'rotangle', 'rr'], 1);
+                    add_str_attrs(opt,$canvas,['test']);
                     return new ZollnerGame(opt);
                 }
             },
@@ -103,7 +117,7 @@
                     this.log();
                     this.stop();
                     console.log(this.states);
-                    $('#vis-exposition-number').text(this.i  + ' / ' + this.n);
+                    $('.vis-exposition-number').text(this.i  + ' / ' + this.n);
                     if (this.i > this.n) {
                         this.clear_game();
                         $.vis('next');
@@ -161,7 +175,7 @@
                     this.current = this.games[this.current_fn](ppi, $canvas);
                     this.current_$canvas = $canvas;
                     this.current.start();
-                    $('#vis-exposition-number').text(this.i  + ' / ' + this.n);
+                    $('.vis-exposition-number').text(this.i  + ' / ' + this.n);
                     return true;
                 }
                 return false;

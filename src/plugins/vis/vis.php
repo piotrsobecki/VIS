@@ -35,7 +35,7 @@ require_once( 'includes/lib/class-vis-taxonomy.php' );
  * @return object vis
  */
 function vis () {
-	$instance = vis::instance( __FILE__, '1.0.3' );
+	$instance = vis::instance( __FILE__, '1.1' );
 
 	if ( is_null( $instance->settings ) ) {
 		$instance->settings = vis_Settings::instance( $instance );
@@ -57,7 +57,7 @@ function vis_game($game_name, $params){
 		$html = $html . ' data-vis-'.$param_key.'="'.$param_value.'" ';
 	}
 	$html = $html . ' ></canvas>
-	<div id="vis-canvas-overlay"><span id="vis-exposition-number"></span></div>';
+	<div class="vis-canvas-overlay"><span class="vis-exposition-number"></span></div>';
 	return $html;
 }
 
@@ -111,6 +111,8 @@ function vis_game_ebbinghous_shortcode_ui($params){
 				array( 'label' => esc_html__( 'Radius of right outer circle (inches)', 'shortcode-ui-game' ), 'attr' => 'rro', 'type' => 'number'),
 				
 				array( 'label' => esc_html__( 'Number of outer circles', 'shortcode-ui-game' ), 'attr' => 'nc', 'type' => 'number'),
+
+                array( 'label' => esc_html__( 'Which element should be tested', 'shortcode-ui-game' ), 'attr' => 'test', 'type' => 'text')
 			)
 		)
 	);
@@ -134,6 +136,8 @@ function vis_game_ml_shortcode_ui($params){
 				array( 'label' => esc_html__( 'Length of the top arrow line (inches)', 'shortcode-ui-game' ), 'attr' => 'tal', 'type' => 'number'),
 				array( 'label' => esc_html__( 'Length of the bottom arrow line (inches)', 'shortcode-ui-game' ), 'attr' => 'bal', 'type' => 'number'),
 				array( 'label' => esc_html__( 'Arrow angle', 'shortcode-ui-game' ), 'attr' => 'theta', 'type' => 'number'),
+
+                array( 'label' => esc_html__( 'Which element should be tested', 'shortcode-ui-game' ), 'attr' => 'test', 'type' => 'text')
 			)
 		)
 	);
@@ -159,6 +163,8 @@ function vis_game_ponzo_shortcode_ui($params){
 				array( 'label' => esc_html__( 'Length of the top line (inches)', 'shortcode-ui-game' ), 'attr' => 'tl', 'type' => 'number'),
 				array( 'label' => esc_html__( 'Length of the bottom line (inches)', 'shortcode-ui-game' ), 'attr' => 'bl', 'type' => 'number'),
 				array( 'label' => esc_html__( 'Angle of side lines', 'shortcode-ui-game' ), 'attr' => 'angle', 'type' => 'number'),
+
+                array( 'label' => esc_html__( 'Which element should be tested', 'shortcode-ui-game' ), 'attr' => 'test', 'type' => 'text')
 			)
 		)
 	);
@@ -182,6 +188,8 @@ function vis_game_poggendorff_shortcode_ui($params){
 				array( 'label' => esc_html__( 'Randomization factor (maximum change to test element)', 'shortcode-ui-game' ), 'attr' => 'rr', 'type' => 'number'),
 				
 				array( 'label' => esc_html__( 'Components height (inches)', 'shortcode-ui-game' ), 'attr' => 'height', 'type' => 'number'),
+
+                array( 'label' => esc_html__( 'Which element should be tested', 'shortcode-ui-game' ), 'attr' => 'test', 'type' => 'text')
 
 			)
 		)
@@ -208,6 +216,8 @@ function vis_game_zollner_shortcode_ui($params){
 				array( 'label' => esc_html__( 'Length of the  lines (inches)', 'shortcode-ui-game' ), 'attr' => 'len', 'type' => 'number'),
 				array( 'label' => esc_html__( 'Spaciong between smaller lines (inches)', 'shortcode-ui-game' ), 'attr' => 'spacings', 'type' => 'number'),
 				array( 'label' => esc_html__( 'Rotation angle of whole setup', 'shortcode-ui-game' ), 'attr' => 'rotangle', 'type' => 'number'),
+
+                array( 'label' => esc_html__( 'Which element should be tested', 'shortcode-ui-game' ), 'attr' => 'test', 'type' => 'text')
 				
 			)
 		)

@@ -64,7 +64,7 @@ html {
 }
 
 
-#vis-canvas-overlay{
+.vis-canvas-overlay{
 	position: fixed;
 	display: block;
 	z-index: 10000;
@@ -73,7 +73,7 @@ html {
 	width: 50%;
 	bottom: 10%;
 }
-#vis-exposition-number {
+.vis-exposition-number {
 	font-size: 0.8em;
 	color:gray;
 }

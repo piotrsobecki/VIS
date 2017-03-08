@@ -1,5 +1,8 @@
 function LineComponent(x1, y1, x2, y2) {
     return {
+        length: function () {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        },
         update: function (context) {
             context.beginPath();
             context.moveTo(x1, y1);
@@ -11,8 +14,26 @@ function LineComponent(x1, y1, x2, y2) {
     }
 }
 
+function CenteredLineComponent(x, y, length) {
+    return {
+        length: length,
+        update: function (context) {
+            context.beginPath();
+            context.moveTo(x - this.length/2, y);
+            context.lineTo(x + this.length/2, y);
+            context.stroke();
+        },
+        newPos: function (context) {
+            new_length = this.length + this.speed;
+            if (new_length > 0) {
+                this.length = new_length;
+            }
+        }
+    }
+}
 
-function PonzoComponent(x, y, angle, len_line, width, len_reference, len) {
+
+function PonzoComponent(x, y, angle, width, side_len_lenth) {
 
     function endpoints(m, angle, len) {
         var a = Math.tan(angle * (Math.PI / 180));
@@ -23,37 +44,15 @@ function PonzoComponent(x, y, angle, len_line, width, len_reference, len) {
     }
 
     return {
-        length: len,
-        length_reference: len_reference,
         speed: 0,
         update: function (context) {
-
-            mid = {x: x - width / 2, y: y}
-            ep_left = endpoints(mid, -angle, len_line);
-
-            mid = {x: x + width / 2, y: y}
-            ep_right = endpoints(mid, angle, len_line);
-
-
+            mid = {x: x - width / 2, y: y};
+            ep_left = endpoints(mid, -angle, side_len_lenth);
+            mid = {x: x + width / 2, y: y};
+            ep_right = endpoints(mid, angle, side_len_lenth);
             new LineComponent(ep_left[0].x, ep_left[0].y, ep_left[1].x, ep_left[1].y).update(context);
             new LineComponent(ep_right[0].x, ep_right[0].y, ep_right[1].x, ep_right[1].y).update(context);
 
-            //Reference
-            x11 = x - this.length_reference / 2;
-            x21 = x + this.length_reference / 2;
-
-            y11 = y - width / 4;
-            y21 = y - width / 4;
-
-            // Test
-            x12 = x - this.length / 2;
-            x22 = x + this.length / 2;
-
-            y12 = y + width / 4;
-            y22 = y + width / 4;
-
-            new LineComponent(x11, y11, x21, y21).update(context);
-            new LineComponent(x12, y12, x22, y22).update(context);
         },
         newPos: function (context) {
             new_length = this.length + this.speed;
@@ -63,7 +62,7 @@ function PonzoComponent(x, y, angle, len_line, width, len_reference, len) {
         }
     }
 }
-function InwardMultiArrowComponent(x, y, len, r, theta) {
+function MultiArrowComponent(x, y, len, r, theta) {
     return {
         length: len,
         speed: 0,
@@ -78,22 +77,22 @@ function InwardMultiArrowComponent(x, y, len, r, theta) {
 
             context.beginPath();
             context.moveTo(x1, y1);
-            context.lineTo(x1 + r * Math.cos(theta / 2), y1 + r * Math.sin(theta));
+            context.lineTo(x1 + r * Math.cos(theta* Math.PI / 180), y1 + r * Math.sin(theta* Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x1, y1);
-            context.lineTo(x1 + r * Math.cos(-theta / 2), y1 + r * Math.sin(-theta));
+            context.lineTo(x1 + r * Math.cos(-theta* Math.PI / 180), y1 + r * Math.sin(-theta* Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x2, y2);
-            context.lineTo(x2 + r * Math.cos(-theta), y2 + r * Math.sin(-theta));
+            context.lineTo(x2 + r * Math.cos(-(180-theta)* Math.PI / 180), y2 + r * Math.sin(-(180-theta)* Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x2, y2);
-            context.lineTo(x2 + r * Math.cos(-theta), y2 + r * Math.sin(theta));
+            context.lineTo(x2 + r * Math.cos(-(180-theta)* Math.PI / 180), y2 + r * Math.sin((180-theta)* Math.PI / 180));
             context.stroke();
         },
         newPos: function (context) {
@@ -105,7 +104,7 @@ function InwardMultiArrowComponent(x, y, len, r, theta) {
     }
 }
 
-function MultiArrowComponent(x, y, len, r, theta) {
+function InwardMultiArrowComponent(x, y, len, r, theta) {
     return {
         length: len,
         speed: 0,
@@ -120,22 +119,22 @@ function MultiArrowComponent(x, y, len, r, theta) {
 
             context.beginPath();
             context.moveTo(x1, y1);
-            context.lineTo(x1 + r * Math.cos(theta), y1 + r * Math.sin(theta));
+            context.lineTo(x1 + r * Math.cos((180-theta)* Math.PI / 180), y1 + r * Math.sin((180-theta)* Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x1, y1);
-            context.lineTo(x1 + r * Math.cos(-theta), y1 + r * Math.sin(-theta));
+            context.lineTo(x1 + r * Math.cos(-(180-theta)* Math.PI / 180), y1 + r * Math.sin(-(180-theta)* Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x2, y2);
-            context.lineTo(x2 + r * Math.cos(-theta / 2), y2 + r * Math.sin(-theta));
+            context.lineTo(x2 + r * Math.cos(-theta* Math.PI / 180 ), y2 + r * Math.sin(-theta* Math.PI / 180));
             context.stroke();
 
             context.beginPath();
             context.moveTo(x2, y2);
-            context.lineTo(x2 + r * Math.cos(-theta / 2), y2 + r * Math.sin(theta));
+            context.lineTo(x2 + r * Math.cos(-theta* Math.PI / 180 ), y2 + r * Math.sin(theta* Math.PI / 180));
             context.stroke();
         },
         newPos: function (context) {
@@ -170,11 +169,11 @@ function CircleComponent(x, y, radius) {
 }
 
 
-function FixationComponent(x,y,radius,color) {
+function FixationComponent(x, y, radius, color) {
     return {
         update: function (ctx) {
             ctx.beginPath();
-            ctx.fillStyle=color;
+            ctx.fillStyle = color;
             ctx.arc(x, y, radius, 0, 2 * Math.PI);
             ctx.fill();
         },
@@ -465,7 +464,8 @@ function PoggendorffGame(opt) {
     var opts = merge_options({
         spacing: 200, //Spacing between components,
         height: 600, //Spacing between components,
-        rr: 200 //Random modifier
+        rr: 90, //Random modifier
+        test: 'lower'
     }, opt);
 
     opts.handlers = {
@@ -482,7 +482,12 @@ function PoggendorffGame(opt) {
     this.start = function () {
         const w = this.arena.canvas.width;
         const h = this.arena.canvas.height;
-        this.elem_test = new PoggendorffComponent(w / 2, h / 2, this.o.spacing, this.o.height, 0, vis_utils.random_change(0, this.o.rr));
+
+        var rc = -this.o.rr * Math.random()
+        if (this.o.test == 'upper') {
+            rc = -rc;
+        }
+        this.elem_test = new PoggendorffComponent(w / 2, h / 2, this.o.spacing, this.o.height, 0, rc);
         AbstractGame.prototype.start.apply(this);
     };
     this.update = function () {
@@ -526,8 +531,8 @@ function ZollnerGame(opt) {
         const w = this.arena.canvas.width;
         const h = this.arena.canvas.height;
         var rot_angle = vis_utils.random_change(this.o.rotangle, this.o.rr);
+        var reference_angle = 0;
         var angle = vis_utils.random_change(0, this.o.rr);
-        var reference_angle = vis_utils.random_change(0, this.o.rr);
         this.elem_test = new ZollnerComponent(w / 2, h / 2, this.o.len, this.o.spacing * 3, this.o.spacings, rot_angle, reference_angle, angle);
         AbstractGame.prototype.start.apply(this);
     };
@@ -562,15 +567,16 @@ function EbinghouseGame(opt) {
         rri: 20, //Radius of right inner circle
         rro: 10, //Radius of right outer circle
         rr: 5,	//Random modifier
-        nc: 8 	//Number of outer circles
+        nc: 8, 	//Number of outer circles
+        test: 'left'
     }, opt);
 
     opts.handlers = {
         up: function () {
-            self.elem_left.central.radius_speed = 1;
+            self.elem_test.central.radius_speed = 1;
         },
         down: function () {
-            self.elem_left.central.radius_speed = -1;
+            self.elem_test.central.radius_speed = -1;
         }
     };
 
@@ -579,25 +585,35 @@ function EbinghouseGame(opt) {
     this.start = function () {
         var c_x = this.arena.canvas.width / 2;
         var c_y = this.arena.canvas.height / 2;
-        this.elem_left = new EbinghouseComponent(c_x - this.o.spacing / 2, c_y, this.o.radius, vis_utils.random_change(this.o.lri, this.o.rr), this.o.nc, this.o.lro, "red");
-        this.elem_right = new EbinghouseComponent(c_x + this.o.spacing / 2, c_y, this.o.radius, vis_utils.random_change(this.o.rri, this.o.rr), this.o.nc, this.o.rro, "red");
+
+        var elem_left = new EbinghouseComponent(c_x - this.o.spacing / 2, c_y, this.o.radius, vis_utils.random_change(this.o.lri, this.o.rr), this.o.nc, this.o.lro, "red");
+        var elem_right = new EbinghouseComponent(c_x + this.o.spacing / 2, c_y, this.o.radius, vis_utils.random_change(this.o.rri, this.o.rr), this.o.nc, this.o.rro, "red");
+
+        if (this.o.test == 'left') {
+            this.elem_test = elem_left;
+            this.elem_ref = elem_right;
+        } else {
+            this.elem_test = elem_right;
+            this.elem_ref = elem_left;
+        }
+
         AbstractGame.prototype.start.apply(this);
     };
     this.update = function () {
-        this.elem_left.central.radius_speed = 0;
+        this.elem_test.central.radius_speed = 0;
         AbstractGame.prototype.update.apply(this);
 
-        this.elem_left.newPos();
-        this.elem_right.newPos();
+        this.elem_test.newPos();
+        this.elem_ref.newPos();
 
-        this.elem_left.update(this.arena.context);
-        this.elem_right.update(this.arena.context);
+        this.elem_test.update(this.arena.context);
+        this.elem_ref.update(this.arena.context);
     };
     this.state = function () {
         return merge_options(AbstractGame.prototype.state.apply(this),
             {
-                test: this.elem_left.central.radius / this.o.ppi,
-                reference: this.elem_right.central.radius / this.o.ppi
+                test: this.elem_test.central.radius / this.o.ppi,
+                reference: this.elem_ref.central.radius / this.o.ppi
             }
         );
     };
@@ -612,11 +628,13 @@ function PonzoGame(opt) {
 
     var opts = merge_options({
         spacing: 300, // Spacing between top and bottom component
+        inner_spacing: 200,
         side_line_length: 300, // Side lines length
         tl: 200, //Length of the top line
         bl: 200, //Length of the bottom line
         rr: 50, //Random modifier
-        angle: 60 //Angle of side lines
+        angle: 60, //Angle of side lines,
+        test: 'lower'
     }, opt);
 
     opts.handlers = {
@@ -634,7 +652,18 @@ function PonzoGame(opt) {
         var h = this.arena.canvas.height;
         var tl = this.o.tl;//vis_utils.random_change(o.tl,o.rr);
         var bl = vis_utils.random_change(this.o.bl, this.o.rr);
-        this.elem_test = new PonzoComponent(w / 2, h / 2, this.o.angle, this.o.side_line_length, this.o.spacing, tl, bl);
+        var elem_upper = new CenteredLineComponent(w/2, h/2 - this.o.inner_spacing / 2, this.o.tl);
+        var elem_lower = new CenteredLineComponent(w/2, h/2 + this.o.inner_spacing / 2, this.o.bl);
+        this.elem_main = new PonzoComponent(w / 2, h / 2, this.o.angle,this.o.spacing, this.o.side_line_length);
+
+        if ( this.o.test == 'upper'){
+            this.elem_test = elem_upper;
+            this.elem_ref = elem_lower;
+        } else {
+            this.elem_test = elem_lower;
+            this.elem_ref = elem_upper;
+        }
+
         AbstractGame.prototype.start.apply(this);
     };
     this.update = function () {
@@ -642,12 +671,14 @@ function PonzoGame(opt) {
         AbstractGame.prototype.update.apply(this);
         this.elem_test.newPos();
         this.elem_test.update(this.arena.context);
+        this.elem_ref.update(this.arena.context);
+        this.elem_main.update(this.arena.context);
     };
     this.state = function () {
         return merge_options(AbstractGame.prototype.state.apply(this),
             {
                 test: this.elem_test.length / this.o.ppi,
-                reference: this.elem_test.length_reference / this.o.ppi
+                reference: this.elem_ref.length / this.o.ppi
             }
         );
     };
@@ -665,7 +696,8 @@ function MullerLyerGame(opt) {
         tl: 300, //Top component Length
         bl: 300, //Bottom component Length
         theta: 90, //Arrow angle
-        rr: 100	//Random modifier
+        rr: 100,	//Random modifier
+        test: 'lower'
     }, opt);
 
     opts = merge_options({
@@ -687,8 +719,14 @@ function MullerLyerGame(opt) {
     this.start = function () {
         var w = this.arena.canvas.width;
         var h = this.arena.canvas.height;
-        this.elem_test = new MultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, vis_utils.random_change(this.o.tl, this.o.rr), this.o.tal, this.o.theta);
-        this.elem_ref = new InwardMultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, vis_utils.random_change(this.o.bl, this.o.rr), this.o.bal, this.o.theta);
+        if (this.o.test == 'upper') {
+            this.elem_ref  =  new MultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, this.o.bl, this.o.bal, this.o.theta);
+            this.elem_test =  new InwardMultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, vis_utils.random_change(this.o.tl, this.o.rr), this.o.tal, this.o.theta);
+        } else {
+
+            this.elem_ref =  new InwardMultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, this.o.tl, this.o.tal, this.o.theta);
+            this.elem_test =  new MultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, vis_utils.random_change(this.o.bl, this.o.rr), this.o.bal, this.o.theta);
+        }
         AbstractGame.prototype.start.apply(this);
     };
     this.update = function () {
