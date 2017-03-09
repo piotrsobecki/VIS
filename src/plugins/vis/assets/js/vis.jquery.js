@@ -116,9 +116,9 @@
                     this.i = this.i + 1;
                     this.log();
                     this.stop();
-                    console.log(this.states);
                     $('.vis-exposition-number').text(this.i  + ' / ' + this.n);
                     if (this.i > this.n) {
+                        this.log_combined();
                         this.clear_game();
                         $.vis('next');
                     } else {
@@ -131,7 +131,7 @@
                             self.current_$canvas.removeAttr("timeout-wait");
                         }, 1000);
                     }
-
+                    console.log(this.states);
                 }
             },
             start: function () {
@@ -142,6 +142,34 @@
             },
             log: function () {
                 this.states[this.state_key].push(this.current.state())
+            },
+            log_combined: function () {
+                var properties = [];
+                var data_sum = {};
+                var states = this.states[this.state_key];
+                var n = states.length;
+                for (var idx in states){
+                    var dict = states[idx];
+                    for (var key in dict){
+                        if (data_sum.hasOwnProperty(key)) {
+                            data_sum[key] = data_sum[key] + dict[key];
+                        } else {
+                            data_sum[key] = dict[key];
+                            properties.push(key);
+                        }
+                    }
+                }
+                var data_avg = {};
+                for (var pid in properties){
+                    var property = properties[pid];
+                    data_avg[property] = data_sum[property] / n;
+                }
+                var description = {'n':n};
+                this.states[this.state_key+'_combined'] = {
+                    "description":description,
+                    "sum":data_sum,
+                    "avg":data_avg
+                };
             },
             clear_game: function () {
                 if (this.current !== undefined) {

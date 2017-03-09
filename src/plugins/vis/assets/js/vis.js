@@ -490,12 +490,13 @@ function PoggendorffGame(opt) {
         this.elem_test.update(this.arena.context);
     };
     this.state = function () {
-        return merge_options(AbstractGame.prototype.state.apply(this),
-            {
-                test: this.elem_test.offset / this.o.ppi,
-                reference: this.elem_test.offset_reference / this.o.ppi
-            }
-        );
+        var data = {
+            test: this.elem_test.offset / this.o.ppi,
+            reference: this.elem_test.offset_reference / this.o.ppi
+        };
+        data['underestimation']= Math.max(0,data.reference-data.test);
+        data['overestimation']= Math.max(0,data.test-data.reference);
+        return merge_options(AbstractGame.prototype.state.apply(this),data);
     };
 }
 PoggendorffGame.prototype = Object.create(AbstractGame.prototype);
@@ -540,12 +541,13 @@ function ZollnerGame(opt) {
         this.elem_test.update(this.arena.context);
     };
     this.state = function () {
-        return merge_options(AbstractGame.prototype.state.apply(this),
-            {
-                test: this.elem_test.angle,
-                reference: this.elem_test.angle_reference
-            }
-        );
+        var data = {
+            test: this.elem_test.angle,
+            reference: this.elem_test.angle_reference
+        };
+        data['underestimation']= Math.max(0,data.reference-data.test);
+        data['overestimation']= Math.max(0,data.test-data.reference);
+        return merge_options(AbstractGame.prototype.state.apply(this),data);
     };
 }
 ZollnerGame.prototype = Object.create(AbstractGame.prototype);
@@ -606,12 +608,13 @@ function EbinghouseGame(opt) {
         this.elem_ref.update(this.arena.context);
     };
     this.state = function () {
-        return merge_options(AbstractGame.prototype.state.apply(this),
-            {
-                test: this.elem_test.central.radius / this.o.ppi,
-                reference: this.elem_ref.central.radius / this.o.ppi
-            }
-        );
+        var data = {
+            test: this.elem_test.central.radius / this.o.ppi,
+            reference: this.elem_ref.central.radius / this.o.ppi
+        };
+        data['underestimation']= Math.max(0,data.reference-data.test);
+        data['overestimation']= Math.max(0,data.test-data.reference);
+        return merge_options(AbstractGame.prototype.state.apply(this),data);
     };
 }
 EbinghouseGame.prototype = Object.create(AbstractGame.prototype);
@@ -671,12 +674,13 @@ function PonzoGame(opt) {
         this.elem_main.update(this.arena.context);
     };
     this.state = function () {
-        return merge_options(AbstractGame.prototype.state.apply(this),
-            {
-                test: this.elem_test.length / this.o.ppi,
-                reference: this.elem_ref.length / this.o.ppi
-            }
-        );
+        var data = {
+            test: this.elem_test.length / this.o.ppi,
+            reference: this.elem_ref.length / this.o.ppi
+        };
+        data['underestimation']= Math.max(0,data.reference-data.test);
+        data['overestimation']= Math.max(0,data.test-data.reference);
+        return merge_options(AbstractGame.prototype.state.apply(this),data );
     };
 }
 PonzoGame.prototype = Object.create(AbstractGame.prototype);
@@ -734,12 +738,13 @@ function MullerLyerGame(opt) {
         this.elem_ref.update(this.arena.context);
     };
     this.state = function () {
-        return merge_options(AbstractGame.prototype.state.apply(this),
-            {
-                test: this.elem_test.length / this.o.ppi,
-                reference: this.elem_ref.length / this.o.ppi
-            }
-        );
+        var data = {
+            test: this.elem_test.length / this.o.ppi,
+            reference: this.elem_ref.length / this.o.ppi
+        };
+        data['underestimation']= Math.max(0,data.reference-data.test);
+        data['overestimation']= Math.max(0,data.test-data.reference);
+        return merge_options(AbstractGame.prototype.state.apply(this),data);
     };
 }
 MullerLyerGame.prototype = Object.create(AbstractGame.prototype);
