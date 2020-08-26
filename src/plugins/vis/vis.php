@@ -73,6 +73,18 @@ function vis_game_ml($params){
 }
 add_shortcode('vis-game-ml','vis_game_ml');
 
+function vis_game_ml2($params){
+	return vis_game('ml2',$params);
+}
+add_shortcode('vis-game-ml2','vis_game_ml2');
+
+
+function vis_game_mlc2($params){
+	return vis_game('mlc2',$params);
+}
+add_shortcode('vis-game-mlc2','vis_game_mlc2');
+
+
 function vis_game_ponzo($params){
 	return vis_game('ponzo',$params);
 }
@@ -144,6 +156,55 @@ function vis_game_ml_shortcode_ui($params){
 }
 add_action( 'register_shortcode_ui', 'vis_game_ml_shortcode_ui' );
 
+
+
+function vis_game_ml2_shortcode_ui($params){
+	shortcode_ui_register_for_shortcode( 
+		'vis-game-ml2',
+		array(
+			'label' => esc_html__( 'VIS Game: Muller Lyer 2', 'shortcode-ui-game' ),
+			'post_type' => array( 'survey' ),
+			'attrs' => array(
+				array( 'label' => esc_html__( 'Spacing between components (inches)', 'shortcode-ui-game' ), 'attr' => 'spacing', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Number of expositions', 'shortcode-ui-game' ), 'attr' => 'n', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Speed of change given input', 'shortcode-ui-game' ), 'attr' => 'speed', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Randomization factor (maximum change to test element)', 'shortcode-ui-game' ), 'attr' => 'rr', 'type' => 'number'),
+				
+				array( 'label' => esc_html__( 'Length of the top line (inches)', 'shortcode-ui-game' ), 'attr' => 'tl', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Length of the bottom line (inches)', 'shortcode-ui-game' ), 'attr' => 'bl', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Length of the top arrow line (inches)', 'shortcode-ui-game' ), 'attr' => 'tal', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Length of the bottom arrow line (inches)', 'shortcode-ui-game' ), 'attr' => 'bal', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Arrow angle', 'shortcode-ui-game' ), 'attr' => 'theta', 'type' => 'number'),
+
+                array( 'label' => esc_html__( 'Which element should be tested', 'shortcode-ui-game' ), 'attr' => 'test', 'type' => 'text')
+			)
+		)
+	);
+}
+add_action( 'register_shortcode_ui', 'vis_game_ml2_shortcode_ui' );
+
+
+function vis_game_mlc2_shortcode_ui($params){
+	shortcode_ui_register_for_shortcode( 
+		'vis-game-mlc2',
+		array(
+			'label' => esc_html__( 'VIS Game: Muller Lyer 2 Control', 'shortcode-ui-game' ),
+			'post_type' => array( 'survey' ),
+			'attrs' => array(
+				array( 'label' => esc_html__( 'Spacing between components (inches)', 'shortcode-ui-game' ), 'attr' => 'spacing', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Number of expositions', 'shortcode-ui-game' ), 'attr' => 'n', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Speed of change given input', 'shortcode-ui-game' ), 'attr' => 'speed', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Randomization factor (maximum change to test element)', 'shortcode-ui-game' ), 'attr' => 'rr', 'type' => 'number'),
+				
+				array( 'label' => esc_html__( 'Length of the top line (inches)', 'shortcode-ui-game' ), 'attr' => 'tl', 'type' => 'number'),
+				array( 'label' => esc_html__( 'Length of the bottom line (inches)', 'shortcode-ui-game' ), 'attr' => 'bl', 'type' => 'number'),
+
+                array( 'label' => esc_html__( 'Which element should be tested', 'shortcode-ui-game' ), 'attr' => 'test', 'type' => 'text')
+			)
+		)
+	);
+}
+add_action( 'register_shortcode_ui', 'vis_game_mlc2_shortcode_ui' );
 
 
 

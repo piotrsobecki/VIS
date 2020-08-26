@@ -73,31 +73,6 @@
                     add_str_attrs(opt,$canvas,['test']);
                     return new MullerLyerGame(opt);
                 },
-                ml2: function (ppi, $canvas) {
-				
-                    var opt = {
-                        canvasID: $canvas.attr('id'),
-                        ppi: ppi
-                    };
-                    add_attrs(opt, $canvas, ['spacing', 'll', 'rl', 'lal', 'ral', 'rr'], ppi);
-                    add_attrs(opt, $canvas, ['speed', 'theta'], 1);
-                    add_str_attrs(opt, $canvas, ['test']);
-					
-					
-                    return new MullerLyer2Game(opt);
-                },
-                mlc2: function (ppi, $canvas) {
-				
-                    var opt = {
-                        canvasID: $canvas.attr('id'),
-                        ppi: ppi
-                    };
-                    add_attrs(opt, $canvas, ['spacing', 'll', 'rl', 'lal', 'ral', 'rr'], ppi);
-                    add_attrs(opt, $canvas, ['speed', 'theta'], 1);
-                    add_str_attrs(opt, $canvas, ['test']);
-										
-                    return new MullerLyer2ControlGame(opt);
-                },
                 ponzo: function (ppi, $canvas) {
                     var opt = {
                         canvasID: $canvas.attr('id'),
@@ -125,7 +100,7 @@
                     };
                     add_attrs(opt, $canvas, ['spacing', 'spacings', 'len','stripe_len'], ppi);
                     add_attrs(opt, $canvas, ['speed', 'rotangle', 'rr','rr_reference','stripe_angle'], 1);
-                    add_str_attrs(opt, $canvas,['test']);
+                    add_str_attrs(opt,$canvas,['test']);
                     return new ZollnerGame(opt);
                 }
             },
@@ -156,8 +131,7 @@
                             self.current_$canvas.removeAttr("timeout-wait");
                         }, 1000);
                     }
-					
-                    //console.log(this.states);
+                    console.log(this.states);
                 }
             },
             start: function () {

@@ -13,8 +13,8 @@
 <script type="text/javascript" src="assets/js/modernizr.custom.js"></script>
 <script type="text/javascript" src="assets/js/deck.core.js"></script>
 
-<script type="text/javascript" src="assets/js/vis.js"></script>
-<script type="text/javascript" src="assets/js/vis.jquery.js"></script>
+<script type="text/javascript" src="assets/js/vis.old.js"></script>
+<script type="text/javascript" src="assets/js/vis.jquery.old.js"></script>
 
 </head>
 
@@ -42,6 +42,72 @@ jQuery = $;
 		</section>
 		
 		
+		
+		<section class="slide">
+			<h2>Złudzenie Ebbinghaus'a</h2>
+			<p>
+			Ruszając strzałkami [góra] oraz [dół] ustaw wielkość środkowego okręgu w figurze znajdującej się po lewej stronie ekranu tak, by była równa wielkości środkowego okręgu w figurze po prawej stronie ekranu.
+			</p>
+			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
+		</section>
+		
+		<section class="slide">
+			<h2>Złudzenie Ebbinghaus'a</h2>
+			<canvas id="vis-ebbinghaus-canvas" width="720px" height="720px" data-vis-game="ebbinghaus" data-vis-n="5" data-vis-spacing="5" />
+		</section>
+
+		<section class="slide">
+			<h2>Złudzenie Muller'a-Lyer'a</h2>
+			<p>
+			Ruszając strzałkami [góra] oraz [dół] ustaw długość dolnej poziomej linii tak, by była równa długości górnej poziomej linii
+			</p>
+			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
+		</section>
+	
+		
+		<section class="slide">
+			<h2>Złudzenie Muller'a-Lyer'a</h2>
+			<canvas id="vis-ml-canvas" width="720px" height="720px" data-vis-game="ml" data-vis-n="5"  data-vis-spacing="3" data-vis-theta="40"/>
+		</section>
+			
+			
+			
+		<section class="slide">
+			<h2>Złudzenie Poggendorff'a</h2>
+			<p>
+			Ruszając strzałkami [góra] oraz [dół] ustaw linię skośną, widoczną po prawej stronie ekranu tak, by znajdowała się na jednej osi z linią skośną umieszczoną po lewej stronie.
+			</p>
+			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
+		</section>
+		<section class="slide">
+			<h2>Złudzenie Poggendorff'a</h2>
+			<canvas id="vis-poggendorff-canvas" width="720px" height="720px" data-vis-game="poggendorff" data-vis-n="5" />
+		</section>
+			
+			
+			
+		<section class="slide">
+			<h2>Złudzenie Ponzo</h2>
+			<p>
+			Ruszając strzałkami [góra] oraz [dół] ustaw długość dolnej poziomej linii tak, by była równa długości górnej poziomej linii.
+			</p>
+			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
+		</section>
+		
+		<section class="slide">
+			<h2>Złudzenie Ponzo</h2>
+			<canvas id="vis-ponzo-canvas0" width="720px" height="720px" data-vis-game="ponzo" data-vis-n="2" />
+		</section>	
+		
+		<section class="slide">
+			<h2>Złudzenie Ponzo</h2>
+			<canvas id="vis-ponzo-canvas1" width="720px" height="720px" data-vis-game="ponzo" data-vis-n="2" data-vis-angle="40"  />
+		</section>	
+		
+		
+			
+			
+			
 		<section class="slide">
 			<h2>Złudzenie Zollner'a</h2>
 			<p>
@@ -56,69 +122,6 @@ jQuery = $;
 		</section>	
 		
 		
-		<section class="slide">
-			<h2>Złudzenie Ponzo</h2>
-			<p>
-			Ruszając strzałkami [góra] oraz [dół] ustaw długość dolnej poziomej linii tak, by była równa długości górnej poziomej linii.
-			</p>
-			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
-		</section>
-		
-		<section class="slide">
-			<h2>Złudzenie Ponzo</h2>
-			<canvas id="vis-ponzo-canvas0" width="720px" height="720px" data-vis-game="ponzo" data-vis-n="5" data-vis-test="random" />
-		</section>	
-		
-		
-		
-			<section class="slide">
-			<h2>Złudzenie Poggendorff'a</h2>
-			<p>
-			Ruszając strzałkami [góra] oraz [dół] ustaw linię skośną, widoczną po prawej stronie ekranu tak, by znajdowała się na jednej osi z linią skośną umieszczoną po lewej stronie.
-			</p>
-			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
-		</section>
-		<section class="slide">
-			<h2>Złudzenie Poggendorff'a</h2>
-			<canvas id="vis-poggendorff-canvas" width="720px" height="720px" data-vis-game="poggendorff"  data-vis-height="6.25" data-vis-n="5" data-vis-test="random" />
-		</section>
-		
-
-		<section class="slide">
-			<h2>Złudzenie Muller'a-Lyer'a</h2>
-			<p>
-			Ruszając strzałkami [góra] oraz [dół] ustaw długość dolnej poziomej linii tak, by była równa długości górnej poziomej linii
-			</p>
-			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
-		</section>
-		<!--
-		<section class="slide">
-			<h2>Złudzenie Muller'a-Lyer' Kontrola</h2>
-			<canvas id="vis-ml-control-canvas" width="720px" height="720px" data-vis-game="mlc2" data-vis-n="10"  data-vis-rr="2" data-vis-spacing="5" data-vis-test="random"/>
-		</section>
-		
-		<section class="slide">
-			<h2>Złudzenie Muller'a-Lyer'</h2>
-			<canvas id="vis-ml-canvas" width="720px" height="720px" data-vis-game="ml2" data-vis-n="10" data-vis-rr="2"  data-vis-spacing="5" data-vis-theta="40" data-vis-test="random"/>
-		</section>
-		-->
-		<section class="slide">
-			<h2>Złudzenie Ebbinghaus'a</h2>
-			<p>
-			Ruszając strzałkami [góra] oraz [dół] ustaw wielkość środkowego okręgu w figurze znajdującej się po lewej stronie ekranu tak, by była równa wielkości środkowego okręgu w figurze po prawej stronie ekranu.
-			</p>
-			<div class="vis-button"  onclick="jQuery.vis('next');">Ok</div>
-		</section>
-		
-		<section class="slide">
-			<h2>Złudzenie Ebbinghaus'a</h2>
-			<canvas id="vis-ebbinghaus-canvas" width="720px" height="720px" data-vis-game="ebbinghaus" data-vis-n="5" data-vis-spacing="3" data-vis-test="random" />
-		</section>
-			
-
-			
-
-		
 
 		<section class="slide">
 			<h2>Koniec badania</h2>
@@ -130,6 +133,9 @@ jQuery = $;
 
 	<script>
 		jQuery.vis('init');
+	
+		
+
 	</script>
 
 </body>

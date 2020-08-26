@@ -10,18 +10,6 @@ var component_utils = {
 
 };
 
-function randbool(){
-	var triesCount = 100;
-	var sum = 0;
-    for(var i = 0; i < triesCount; i++){
-        sum += Math.random();
-    }
-    return (sum / triesCount) >= 0.5;
-}
-
-function randfloat_normal() {
-    return ((Math.random() + Math.random() + Math.random() + Math.random() + Math.random() + Math.random()) - 3) / 3;
-}
 
 function LineComponent(x1, y1, x2, y2) {
     return {
@@ -271,18 +259,14 @@ function ZollnerComponent(x, y, width, height, stripe_spacing, rotation_angle, a
             context.restore();
         },
         newPos: function (context) {
-			
-			newAngle = this.angle + this.speed
-			
-			if (newAngle < 45 && newAngle > -45){
-				this.angle = newAngle;				
-			}
-
+            this.angle = this.angle + this.speed;
         }
     }
 }
 
+
 function PoggendorffComponent(x, y, width, height, offset_reference, offset) {
+
 
     function intersection(x1, y1, x2, y2, x3, y3, x4, y4) {
         return {
@@ -336,12 +320,6 @@ function PoggendorffComponent(x, y, width, height, offset_reference, offset) {
             y22 = p1.y - height / 4 - this.offset;
 
             new LineComponent(x12, y12, x22, y22).update(context);
-			
-			
-			//Test line
-            //new LineComponent(x12, p1.y, x22, p1.y - height / 4 ).update(context);
-			
-			
         },
         newPos: function (context) {
             this.offset = this.offset + this.speed;
@@ -410,22 +388,6 @@ KEY_LEFT = 37;
 KEY_RIGHT = 39;
 
 
-
-function toInches(options){
-	
-	var inOptions = {};
-	
-	for (const prop in options){
-		
-		if (!isNaN(options[prop]) && prop!='ppi'){
-			inOptions[prop] = options[prop] / options['ppi'];
-		}
-		
-	}
-	return inOptions;
-}
-
-
 //PROTOTYPE
 function AbstractGame(opt) {
     var that = this;
@@ -452,15 +414,7 @@ function AbstractGame(opt) {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
     };
-	
-	
-	console.log(this.o);
-	console.log(toInches(this.o));
 }
-
-
-
-
 AbstractGame.prototype.start = function () {
     var self = this;
     this.arena.start();
@@ -469,10 +423,7 @@ AbstractGame.prototype.start = function () {
     this.interval = setInterval(function () {
         self.update();
     }, this.o.speed);
-	
-	
 };
-
 AbstractGame.prototype.stop = function () {
     clearInterval(this.interval);
     this.clear();
@@ -506,11 +457,9 @@ function PoggendorffGame(opt) {
     var opts = merge_options({
         spacing: 200, //Spacing between components,
         height: 600, //Spacing between components,
-        rr: 60, //Random modifier
-        test: 'random'
+        rr: 90, //Random modifier
+        test: 'lower'
     }, opt);
-	
-	opts.orig_test = opts.test;
 
     opts.handlers = {
         up: function () {
@@ -524,19 +473,13 @@ function PoggendorffGame(opt) {
     AbstractGame.call(this, opts);
 
     this.start = function () {
-		
         const w = this.arena.canvas.width;
         const h = this.arena.canvas.height;
 
-        var rc = Math.max(this.o.rr * randfloat_normal() + this.o.rr, 0)
-		
-		if (opts.orig_test == 'random'){
-			this.o.test = randbool() ? 'lower' : 'upper';	
-		}
-		if (this.o.test == 'lower') {
-			rc = -rc;
-		} 
-
+        var rc = -this.o.rr * Math.random()
+        if (this.o.test == 'upper') {
+            rc = -rc;
+        }
         this.elem_test = new PoggendorffComponent(w / 2, h / 2, this.o.spacing, this.o.height, 0, rc);
         AbstractGame.prototype.start.apply(this);
     };
@@ -582,7 +525,6 @@ function ZollnerGame(opt) {
     AbstractGame.call(this, opts);
 
     this.start = function () {
-		
         const w = this.arena.canvas.width;
         const h = this.arena.canvas.height;
         var rot_angle = vis_utils.random_change(this.o.rotangle, this.o.rr);
@@ -626,8 +568,6 @@ function EbinghouseGame(opt) {
         nc: 8, 	//Number of outer circles
         test: 'left'
     }, opt);
-	
-	opts.orig_test = opts.test;
 
     opts.handlers = {
         up: function () {
@@ -637,37 +577,13 @@ function EbinghouseGame(opt) {
             self.elem_test.central.radius_speed = -1;
         }
     };
-	
-	// Randomize setup
-
-	//opts.test_setup = randbool() ? 'left' : 'right';
-	
 
     AbstractGame.call(this, opts);
-	
-	this.flipSetup = function(){
-		var lri = this.o.lri
-		var lro = this.o.lro
-		this.o.lri = this.o.rri
-		this.o.lro = this.o.rro
-		this.o.rri = lri
-		this.o.rro = lro
-	}
 
-	
     this.start = function () {
-		
-		
-		if (opts.orig_test == 'random'){
-			this.o.test = randbool() ? 'left' : 'right';
-			if (randbool()){
-				this.flipSetup();
-			}
-		}
-		
         var c_x = this.arena.canvas.width / 2;
         var c_y = this.arena.canvas.height / 2;
-		
+
         var elem_left = new EbinghouseComponent(c_x - this.o.spacing / 2, c_y, this.o.radius, vis_utils.random_change(this.o.lri, this.o.rr), this.o.nc, this.o.lro, "red");
         var elem_right = new EbinghouseComponent(c_x + this.o.spacing / 2, c_y, this.o.radius, vis_utils.random_change(this.o.rri, this.o.rr), this.o.nc, this.o.rro, "red");
 
@@ -681,8 +597,6 @@ function EbinghouseGame(opt) {
 
         AbstractGame.prototype.start.apply(this);
     };
-	
-
     this.update = function () {
         this.elem_test.central.radius_speed = 0;
         AbstractGame.prototype.update.apply(this);
@@ -700,7 +614,6 @@ function EbinghouseGame(opt) {
         };
         data['underestimation']= Math.max(0,data.reference-data.test);
         data['overestimation']= Math.max(0,data.test-data.reference);
-
         return merge_options(AbstractGame.prototype.state.apply(this),data);
     };
 }
@@ -718,12 +631,10 @@ function PonzoGame(opt) {
         side_line_length: 300, // Side lines length
         tl: 200, //Length of the top line
         bl: 200, //Length of the bottom line
-        rr: 100, //Random modifier
+        rr: 50, //Random modifier
         angle: 60, //Angle of side lines,
         test: 'lower'
     }, opt);
-	
-	opts.orig_test = opts.test;
 
     opts.handlers = {
         up: function () {
@@ -733,27 +644,15 @@ function PonzoGame(opt) {
             self.elem_test.speed = -1;
         }
     };
-	
 
     AbstractGame.call(this, opts);
-	
-	
     this.start = function () {
-		
-		
-		// Losowanie wariantu (czy górny czy dolny ulega zmianie)
-		if (opts.orig_test == 'random'){
-			this.o.test = randbool() ? 'lower' : 'upper';	
-		}		
-		
         var w = this.arena.canvas.width;
         var h = this.arena.canvas.height;
         var tl = this.o.tl;//vis_utils.random_change(o.tl,o.rr);
         var bl = vis_utils.random_change(this.o.bl, this.o.rr);
-		
-        var elem_upper = new CenteredLineComponent(w / 2, h / 2 - this.o.inner_spacing / 2, tl);
-        var elem_lower = new CenteredLineComponent(w / 2, h / 2 + this.o.inner_spacing / 2, bl);
-		
+        var elem_upper = new CenteredLineComponent(w / 2, h / 2 - this.o.inner_spacing / 2, this.o.tl);
+        var elem_lower = new CenteredLineComponent(w / 2, h / 2 + this.o.inner_spacing / 2, this.o.bl);
         this.elem_main = new PonzoComponent(w / 2, h / 2, this.o.angle, this.o.spacing, this.o.side_line_length);
 
         if (this.o.test == 'upper') {
@@ -763,8 +662,7 @@ function PonzoGame(opt) {
             this.elem_test = elem_lower;
             this.elem_ref = elem_upper;
         }
-		
-		
+
         AbstractGame.prototype.start.apply(this);
     };
     this.update = function () {
@@ -774,8 +672,6 @@ function PonzoGame(opt) {
         this.elem_test.update(this.arena.context);
         this.elem_ref.update(this.arena.context);
         this.elem_main.update(this.arena.context);
-		
-		
     };
     this.state = function () {
         var data = {
@@ -803,8 +699,6 @@ function MullerLyerGame(opt) {
         rr: 100,	//Random modifier
         test: 'lower'
     }, opt);
-	
-	opts.orig_test = opts.test;
 
     opts = merge_options({
         tal: opts.tl / 4, //Top arrows length
@@ -823,37 +717,25 @@ function MullerLyerGame(opt) {
     AbstractGame.call(this, opts);
 
     this.start = function () {
-		
-		
-		if (opts.orig_test == 'random'){
-		// Losowanie wariantu (czy górny czy dolny ulega zmianie)
-			this.o.test = randbool() ? 'lower' : 'upper';		
-		}
-		
         var w = this.arena.canvas.width;
         var h = this.arena.canvas.height;
-		
         if (this.o.test == 'upper') {
-            this.elem_ref = new InwardMultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, this.o.bl, this.o.bal, this.o.theta);
-            this.elem_test = new MultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, vis_utils.random_change(this.o.tl, this.o.rr), this.o.tal, this.o.theta);
+            this.elem_ref = new MultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, this.o.bl, this.o.bal, this.o.theta);
+            this.elem_test = new InwardMultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, vis_utils.random_change(this.o.tl, this.o.rr), this.o.tal, this.o.theta);
         } else {
+
             this.elem_ref = new InwardMultiArrowComponent(w / 2, h / 2 - this.o.spacing / 2, this.o.tl, this.o.tal, this.o.theta);
             this.elem_test = new MultiArrowComponent(w / 2, h / 2 + this.o.spacing / 2, vis_utils.random_change(this.o.bl, this.o.rr), this.o.bal, this.o.theta);
         }
-		
         AbstractGame.prototype.start.apply(this);
     };
     this.update = function () {
         this.elem_test.speed = 0;
         AbstractGame.prototype.update.apply(this);
-		
         this.elem_test.newPos();
         this.elem_test.update(this.arena.context);
         this.elem_ref.newPos();
         this.elem_ref.update(this.arena.context);
-		
-		
-		
     };
     this.state = function () {
         var data = {
@@ -867,242 +749,5 @@ function MullerLyerGame(opt) {
 }
 MullerLyerGame.prototype = Object.create(AbstractGame.prototype);
 
-///MullerLyer
-function MullerLyer2Game(opt) {
 
-    var self = this;
-
-    var opts = merge_options({
-        spacing: 100, // Spacing between top and bottom component
-        tl: 300, //Top component Length
-        bl: 300, //Bottom component Length
-        theta: 90, //Arrow angle
-        rr: 100,	//Random modifier
-		test: 'left'
-    }, opt);
-	
-	opts.orig_test = opts.test;
-
-    opts = merge_options({
-        tal: opts.tl / 4, //Top arrows length
-        bal: opts.bl / 4 //Bottom arrows length
-    }, opts);
-
-    opts.handlers = {
-        up: function () {
-            self.elem_test.speed = 1;
-        },
-        down: function () {
-            self.elem_test.speed = -1;
-        }
-    };
-
-    AbstractGame.call(this, opts);
-
-    this.start = function () {
-		
-		
-		// Losowanie wariantu (czy górny czy dolny ulega zmianie)
-		if (opts.orig_test == 'random'){
-			this.o.test = randbool() ? 'left' : 'right';		
-		}		
-		
-        var w = this.arena.canvas.width;
-        var h = this.arena.canvas.height;
-		
-        if (this.o.test == 'left') {
-            this.elem_ref = new InwardMultiArrowComponent(w / 2 + this.o.spacing / 2, h / 2 , this.o.bl, this.o.bal, this.o.theta);
-            this.elem_test = new MultiArrowComponent(w / 2 - this.o.spacing / 2, h / 2 , vis_utils.random_change(this.o.tl, this.o.rr), this.o.tal, this.o.theta);
-        } else {
-            this.elem_ref = new InwardMultiArrowComponent(w / 2 - this.o.spacing / 2, h / 2 , this.o.tl, this.o.tal, this.o.theta);
-            this.elem_test = new MultiArrowComponent(w / 2 + this.o.spacing / 2, h / 2 , vis_utils.random_change(this.o.bl, this.o.rr), this.o.bal, this.o.theta);
-        }
-		
-		
-		
-		
-        AbstractGame.prototype.start.apply(this);
-    };
-    this.update = function () {
-        this.elem_test.speed = 0;
-        AbstractGame.prototype.update.apply(this);
-		
-        this.elem_test.newPos();
-        this.elem_test.update(this.arena.context);
-        this.elem_ref.newPos();
-        this.elem_ref.update(this.arena.context);
-		
-		
-		
-    };
-    this.state = function () {
-        var data = {
-            test: this.elem_test.length / this.o.ppi,
-            reference: this.elem_ref.length / this.o.ppi
-        };
-        data['underestimation']= Math.max(0,data.reference-data.test);
-        data['overestimation']= Math.max(0,data.test-data.reference);
-        return merge_options(AbstractGame.prototype.state.apply(this),data);
-    };
-}
-MullerLyer2Game.prototype = Object.create(AbstractGame.prototype);
-
-
-///MullerLyer
-function MullerLyer2ControlGame(opt) {
-
-    var self = this;
-
-    var opts = merge_options({
-        spacing: 100, // Spacing between top and bottom component
-        tl: 300, //Top component Length
-        bl: 300, //Bottom component Length
-        rr: 100,	//Random modifier
-        test: 'left'
-    }, opt);
-	
-	opts.orig_test = opts.test;
-
-    opts.handlers = {
-        up: function () {
-            self.elem_test.speed = 1;
-        },
-        down: function () {
-            self.elem_test.speed = -1;
-        }
-    };
-
-    AbstractGame.call(this, opts);
-
-    this.start = function () {
-		
-		// Losowanie wariantu (czy górny czy dolny ulega zmianie)
-		if (opts.orig_test == 'random'){
-			this.o.test = randbool() ? 'left' : 'right';		
-		}		
-		
-        var w = this.arena.canvas.width;
-        var h = this.arena.canvas.height;
-		
-		
-		
-		var left_line =  new CenteredLineComponent(w / 2 - this.o.spacing / 2, h / 2 , this.o.tl);
-        var right_line =  new CenteredLineComponent(w / 2 + this.o.spacing / 2, h / 2 , this.o.bl);
-		
-		
-        if (this.o.test == 'left') {
-            this.elem_ref = right_line;
-            this.elem_test = left_line;
-			
-        } else {
-            this.elem_ref = left_line;
-            this.elem_test = right_line;
-        }
-	   
-        AbstractGame.prototype.start.apply(this);
-    };
-    this.update = function () {
-        this.elem_test.speed = 0;
-        AbstractGame.prototype.update.apply(this);
-		
-        this.elem_test.newPos();
-        this.elem_test.update(this.arena.context);
-        this.elem_ref.newPos();
-        this.elem_ref.update(this.arena.context);
-		
-		
-		
-    };
-    this.state = function () {
-        var data = {
-            test: this.elem_test.length / this.o.ppi,
-            reference: this.elem_ref.length / this.o.ppi
-        };
-        data['underestimation']= Math.max(0,data.reference-data.test);
-        data['overestimation']= Math.max(0,data.test-data.reference);
-        return merge_options(AbstractGame.prototype.state.apply(this),data);
-    };
-}
-MullerLyer2ControlGame.prototype = Object.create(AbstractGame.prototype);
-
-
-
-
-///MullerLyer
-function MullerLyerControlGame(opt) {
-
-    var self = this;
-
-    var opts = merge_options({
-        spacing: 100, // Spacing between top and bottom component
-        tl: 300, //Top component Length
-        bl: 300, //Bottom component Length
-        rr: 100,	//Random modifier
-        test: 'lower'
-    }, opt);
-	
-	opts.orig_test = opts.test;
-
-    opts.handlers = {
-        up: function () {
-            self.elem_test.speed = 1;
-        },
-        down: function () {
-            self.elem_test.speed = -1;
-        }
-    };
-
-    AbstractGame.call(this, opts);
-
-    this.start = function () {
-	
-		
-		// Losowanie wariantu (czy górny czy dolny ulega zmianie)
-		if (opts.orig_test == 'random'){
-			this.o.test = randbool() ? 'lower' : 'upper';		
-		}		
-		
-        var w = this.arena.canvas.width;
-        var h = this.arena.canvas.height;
-		
-		
-		
-		var top_line =  new CenteredLineComponent(w / 2, h / 2 - this.o.spacing / 2, this.o.tl);
-        var bottom_line =  new CenteredLineComponent(w / 2, h / 2 + this.o.spacing / 2, this.o.bl);
-		
-		
-        if (this.o.test == 'upper') {
-            this.elem_ref = bottom_line;
-            this.elem_test = top_line;
-			
-        } else {
-            this.elem_ref = top_line;
-            this.elem_test = bottom_line;
-        }
-	   
-        AbstractGame.prototype.start.apply(this);
-    };
-    this.update = function () {
-        this.elem_test.speed = 0;
-        AbstractGame.prototype.update.apply(this);
-		
-        this.elem_test.newPos();
-        this.elem_test.update(this.arena.context);
-        this.elem_ref.newPos();
-        this.elem_ref.update(this.arena.context);
-		
-		
-		
-    };
-    this.state = function () {
-        var data = {
-            test: this.elem_test.length / this.o.ppi,
-            reference: this.elem_ref.length / this.o.ppi
-        };
-        data['underestimation']= Math.max(0,data.reference-data.test);
-        data['overestimation']= Math.max(0,data.test-data.reference);
-        return merge_options(AbstractGame.prototype.state.apply(this),data);
-    };
-}
-MullerLyerControlGame.prototype = Object.create(AbstractGame.prototype);
 
